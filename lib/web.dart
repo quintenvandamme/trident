@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:core';
 import 'package:Trident/version.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 String PULL_FILE = '/var/cache/trident/pull_file.txt';
 
@@ -63,10 +64,8 @@ Future<void> valid(url, kernel_version) async {
   }
 }
 
-download_deb(url, name) {
-  var uriurl = Uri.parse(url);
-  http.get(uriurl).then((response) {
-    new File('/tmp/tridentdownloadcache/$name')
-        .writeAsBytes(response.bodyBytes);
-  });
-}
+download_deb(url, name) async {
+  Response response = await get(Uri.parse(url));
+  File file = File('/tmp/tridentdownloadcache/$name');
+  file.writeAsBytes(response.bodyBytes);
+}

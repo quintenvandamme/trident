@@ -46,15 +46,15 @@ installrc(kernel_version, kernel_type, VER_STR, VER_STAND) async {
     if (status_amd64 == 'failed') {
       if (status_arm64 == 'failed') {
       } else if (status_amd64 == 'failed') {
-        download_deb(
+        await download_deb(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_arm64.deb',
             '5arm.deb');
-        download_deb(
+        await download_deb(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-image-unsigned-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_arm64.deb',
             '6arm.deb');
-        download_deb(
+        await download_deb(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-modules-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_arm64.deb',
             '7arm.deb');
@@ -62,60 +62,60 @@ installrc(kernel_version, kernel_type, VER_STR, VER_STAND) async {
     } else if (status_arm64 == 'failed') {
       if (status_amd64 == 'failed') {
       } else if (status_arm64 == 'failed') {
-        download_deb(
+        await download_deb(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_amd64.deb',
             '1amd.deb');
-        download_deb(
+        await download_deb(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$VER_STAND-' +
                 '$VER_STR' +
                 '_$VER_STAND-$VER_STR.$secretstr' +
                 '_all.deb',
             '2amd.deb');
-        download_deb(
+        await download_deb(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-image-unsigned-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_amd64.deb',
             '3amd.deb');
-        download_deb(
+        await download_deb(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-modules-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_amd64.deb',
             '4amd.deb');
       }
     } else {
-      download_deb(
+      await download_deb(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_amd64.deb',
           '1amd.deb');
-      download_deb(
+      await download_deb(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$VER_STAND-' +
               '$VER_STR' +
               '_$VER_STAND-$VER_STR.$secretstr' +
               '_all.deb',
           '2amd.deb');
-      download_deb(
+      await download_deb(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-image-unsigned-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_amd64.deb',
           '3amd.deb');
-      download_deb(
+      await download_deb(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-modules-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_amd64.deb',
           '4amd.deb');
-      download_deb(
+      await download_deb(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_arm64.deb',
           '5arm.deb');
-      download_deb(
+      await download_deb(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-image-unsigned-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_arm64.deb',
           '6arm.deb');
-      download_deb(
+      await download_deb(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-modules-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_arm64.deb',
           '7arm.deb');
     }
   }
 
-  install_2() async {
+  install_2() {
     var shell = Shell();
     if (SysInfo.kernelArchitecture == 'x86_64') {
       //await shell.run('''sudo dpkg -i *amd.deb''');

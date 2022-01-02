@@ -4,7 +4,7 @@ import 'package:Trident/install.dart';
 import 'package:Trident/catalog.dart';
 import "package:system_info/system_info.dart";
 
-String VER = '0.0.1';
+String VER = '0.0.2';
 
 void main(arguments) {
   try {
@@ -60,6 +60,7 @@ void help() {
   print('--version               display version.');
   print('--help                  list all commands.');
   print('--install <kernel>      install specific kernel.');
+  print('--catalog <kernel>      catalog specific kernel.');
 }
 
 void install(kernel) {}
