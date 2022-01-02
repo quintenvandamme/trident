@@ -115,14 +115,12 @@ installrc(kernel_version, kernel_type, VER_STR, VER_STAND) async {
     }
   }
 
-  install_2() {
+  install_2() async {
     var shell = Shell();
     if (SysInfo.kernelArchitecture == 'x86_64') {
-      //await shell.run('''sudo dpkg -i *amd.deb''');
-      print('sudo dpkg -i *amd.deb');
+      await shell.run('''sudo dpkg -i *amd.deb''');
     } else {
-      //await shell.run('''sudo dpkg -i *arm.deb''');
-      print('sudo dpkg -i *arm.deb');
+      await shell.run('''sudo dpkg -i *arm.deb''');
     }
   }
 
