@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:Trident/globals/error.dart';
 import 'package:Trident/web.dart';
 
 get_version() {
@@ -7,10 +8,10 @@ get_version() {
   valid('https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/',
       kernel_version);
   if (kernel_version == null) {
-    print('Please give a valid kernel.');
+    print(error_3);
     get_version();
   } else if (kernel_version == "") {
-    print('Please give a valid kernel.');
+    print(error_3);
     get_version();
   }
   return kernel_version;

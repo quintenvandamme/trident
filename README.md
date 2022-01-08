@@ -1,5 +1,5 @@
 # trident
-The magic kernel manager for elementary os and ubuntu based distros.
+The magic kernel manager for ubuntu based distros.
 
 # testing
 

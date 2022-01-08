@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'package:Trident/web.dart';
+import 'package:Trident/globals/error.dart';
 import "package:system_info/system_info.dart";
 import 'package:process_run/shell.dart';
 
-final path = '/tmp/tridentdownloadcache';
+var path = '/tmp/tridentdownloadcache';
+var shell = Shell();
+var status_amd64_bit = 1;
+var status_arm64_bit = 1;
 
-install_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
+void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
   if (kernel_type == 'RC') {
     get_file(kernel_version).whenComplete(() {
       installrc(kernel_version, kernel_type, VER_STR, VER_STAND);
@@ -17,13 +21,66 @@ install_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
   }
 }
 
-Future<void> create_folder() async {
-  final pathexists = await Directory(path).exists();
-  if (pathexists == true) {
-    await Directory(path).delete(recursive: true);
-    await Directory(path).create(recursive: true);
+void install_wsl(kernel_version, kernel_type) async {
+  String? system_kernel = SysInfo.kernelVersion;
+  if (system_kernel.contains('WSL2')) {
+    system_kernel = system_kernel.replaceAll('-microsoft-standard-WSL2', '');
+    get_username() async {
+      var sex1 = await Process.run(
+        'pwd',
+        [''],
+      );
+      var pwd = sex1.stdout;
+      var name = pwd.split('/mnt/c/Users/');
+      name = name[1].trim();
+      name = name.split('/');
+      name = name[0].trim();
+      return name;
+    }
+
+    install_1(download_link, file_extension) async {
+      var username = await get_username();
+      await download_file(download_link, '/wsl2/kernel$file_extension');
+      await shell
+          .run('''tar -xf $path/wsl2/kernel$file_extension -C $path/wsl2/''');
+      await download_file(
+          'https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.10.y/Microsoft/config-wsl',
+          '/wsl2/config-wsl');
+      Directory.current = '$path/wsl2/';
+      await shell.run(
+          '''sed -i 's+CONFIG_LOCALVERSION="-microsoft-standard-WSL2"+CONFIG_LOCALVERSION="-trident-WSL2"' config-wsl''');
+      await shell.run(
+          '''mv $path/wsl2/config-wsl $path/wsl2/linux-$kernel_version/arch/x86/configs/wsl_defconfig''');
+      Directory.current = '$path/wsl2/linux-$kernel_version/';
+      await shell.run('''make wsl_defconfig''');
+      await shell.run('''make -j \$(nproc)''');
+      await shell.run('''echo "[wsl2]" >> /mnt/c/Users/$username/.wslconfig''');
+      await shell.run(
+          '''echo "kernel=C:\\Users\\$username\\vmlinux" >> /mnt/c/Users/$username/.wslconfig''');
+      print('Done building $kernel_version. Please reboot wsl');
+    }
+
+    if (kernel_type == 'RC') {
+      String download_link =
+          'https://git.kernel.org/torvalds/t/linux-$kernel_version.tar.gz';
+      await install_1(download_link, '.tar.gz');
+    } else {
+      String download_link =
+          'https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$kernel_version.tar.xz';
+      await install_1(download_link, '.tar.xz');
+    }
   } else {
-    await Directory(path).create(recursive: true);
+    print(error_5);
+  }
+}
+
+Future<void> create_folder(folder) async {
+  final pathexists = await Directory(folder).exists();
+  if (pathexists == true) {
+    await Directory(folder).delete(recursive: true);
+    await Directory(folder).create(recursive: true);
+  } else {
+    await Directory(folder).create(recursive: true);
   }
 }
 
@@ -32,8 +89,6 @@ installrc(kernel_version, kernel_type, VER_STR, VER_STAND) async {
   var status_amd64 = status[0];
   var status_arm64 = status[1];
 
-  var status_amd64_bit = 1;
-  var status_arm64_bit = 1;
   if (status_amd64 == 'failed') {
     status_amd64_bit = 0;
   }
@@ -42,19 +97,18 @@ installrc(kernel_version, kernel_type, VER_STR, VER_STAND) async {
   }
 
   install_1(secretstr) async {
-    await create_folder();
     if (status_amd64 == 'failed') {
       if (status_arm64 == 'failed') {
       } else if (status_amd64 == 'failed') {
-        await download_deb(
+        await download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_arm64.deb',
             '5arm.deb');
-        await download_deb(
+        await download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-image-unsigned-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_arm64.deb',
             '6arm.deb');
-        await download_deb(
+        await download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-modules-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_arm64.deb',
             '7arm.deb');
@@ -62,53 +116,53 @@ installrc(kernel_version, kernel_type, VER_STR, VER_STAND) async {
     } else if (status_arm64 == 'failed') {
       if (status_amd64 == 'failed') {
       } else if (status_arm64 == 'failed') {
-        await download_deb(
+        await download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_amd64.deb',
             '1amd.deb');
-        await download_deb(
+        await download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$VER_STAND-' +
                 '$VER_STR' +
                 '_$VER_STAND-$VER_STR.$secretstr' +
                 '_all.deb',
             '2amd.deb');
-        await download_deb(
+        await download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-image-unsigned-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_amd64.deb',
             '3amd.deb');
-        await download_deb(
+        await download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-modules-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
                 '_amd64.deb',
             '4amd.deb');
       }
     } else {
-      await download_deb(
+      await download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_amd64.deb',
           '1amd.deb');
-      await download_deb(
+      await download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$VER_STAND-' +
               '$VER_STR' +
               '_$VER_STAND-$VER_STR.$secretstr' +
               '_all.deb',
           '2amd.deb');
-      await download_deb(
+      await download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-image-unsigned-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_amd64.deb',
           '3amd.deb');
-      await download_deb(
+      await download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-modules-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_amd64.deb',
           '4amd.deb');
-      await download_deb(
+      await download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_arm64.deb',
           '5arm.deb');
-      await download_deb(
+      await download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-image-unsigned-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_arm64.deb',
           '6arm.deb');
-      await download_deb(
+      await download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-modules-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR.$secretstr' +
               '_arm64.deb',
           '7arm.deb');
@@ -116,10 +170,9 @@ installrc(kernel_version, kernel_type, VER_STR, VER_STAND) async {
   }
 
   install_2() async {
-    var shell = Shell();
     if (SysInfo.kernelArchitecture == 'x86_64') {
       await shell.run('''sudo dpkg -i *amd.deb''');
-    } else {
+    } else if (SysInfo.kernelArchitecture == 'ARM') {
       await shell.run('''sudo dpkg -i *arm.deb''');
     }
   }
@@ -155,9 +208,6 @@ installmainline(kernel_version, kernel_type, VER_STR, VER_STAND) async {
   var status = await get_status(kernel_version);
   var status_amd64 = status[0];
   var status_arm64 = status[1];
-
-  var status_amd64_bit = 1;
-  var status_arm64_bit = 1;
   if (status_amd64 == 'failed') {
     status_amd64_bit = 0;
   }
@@ -166,19 +216,18 @@ installmainline(kernel_version, kernel_type, VER_STR, VER_STAND) async {
   }
 
   install_1(secretstr) async {
-    await create_folder();
     if (status_amd64 == 'failed') {
       if (status_arm64 == 'failed') {
       } else if (status_amd64 == 'failed') {
-        download_deb(
+        download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-headers-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
                 '_arm64.deb',
             '5arm.deb');
-        download_deb(
+        download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-image-unsigned-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
                 '_arm64.deb',
             '6arm.deb');
-        download_deb(
+        download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-modules-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
                 '_arm64.deb',
             '7arm.deb');
@@ -186,53 +235,53 @@ installmainline(kernel_version, kernel_type, VER_STR, VER_STAND) async {
     } else if (status_arm64 == 'failed') {
       if (status_amd64 == 'failed') {
       } else if (status_arm64 == 'failed') {
-        download_deb(
+        download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
                 '_amd64.deb',
             '1amd.deb');
-        download_deb(
+        download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$kernel_version-' +
                 '$VER_STR' +
                 '_$kernel_version-$VER_STR.$secretstr' +
                 '_all.deb',
             '2amd.deb');
-        download_deb(
+        download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-image-unsigned-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
                 '_amd64.deb',
             '3amd.deb');
-        download_deb(
+        download_file(
             'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-modules-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
                 '_amd64.deb',
             '4amd.deb');
       }
     } else {
-      download_deb(
+      download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
               '_amd64.deb',
           '1amd.deb');
-      download_deb(
+      download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-headers-$kernel_version-' +
               '$VER_STR' +
               '_$kernel_version-$VER_STR.$secretstr' +
               '_all.deb',
           '2amd.deb');
-      download_deb(
+      download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-image-unsigned-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
               '_amd64.deb',
           '3amd.deb');
-      download_deb(
+      download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/amd64/linux-modules-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
               '_amd64.deb',
           '4amd.deb');
-      download_deb(
+      download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-headers-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
               '_arm64.deb',
           '5arm.deb');
-      download_deb(
+      download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-image-unsigned-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
               '_arm64.deb',
           '6arm.deb');
-      download_deb(
+      download_file(
           'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/arm64/linux-modules-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR.$secretstr' +
               '_arm64.deb',
           '7arm.deb');
@@ -240,13 +289,10 @@ installmainline(kernel_version, kernel_type, VER_STR, VER_STAND) async {
   }
 
   install_2() async {
-    var shell = Shell();
     if (SysInfo.kernelArchitecture == 'x86_64') {
-      //await shell.run('''sudo dpkg -i *amd.deb''');
-      print('sudo dpkg -i *amd.deb');
+      await shell.run('''sudo dpkg -i *amd.deb''');
     } else {
-      //await shell.run('''sudo dpkg -i *arm.deb''');
-      print('sudo dpkg -i *arm.deb');
+      await shell.run('''sudo dpkg -i *arm.deb''');
     }
   }
 

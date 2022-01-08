@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'dart:core';
+import 'package:Trident/globals/error.dart';
 import 'package:Trident/version.dart';
-import 'package:http/http.dart' as http;
+import 'package:Trident/install.dart';
 import 'package:http/http.dart';
 
 String PULL_FILE = '/var/cache/trident/pull_file.txt';
@@ -28,18 +29,16 @@ get_secretstr(link_content, kernel_version) {
   var parts = contents.split(link_content);
   var link_after_part = parts[1].trim();
   link_after_part = link_after_part.replaceAll('">', '');
-  var thestr = link_after_part.split('_');
-  var thestr2 = thestr[0].trim();
-  thestr2 = thestr2.replaceAll('.', '');
-  String link =
-      'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/$link_content$link_after_part';
-  return thestr2;
+  var list = link_after_part.split('_');
+  var secretstr = list[0].trim();
+  secretstr = secretstr.replaceAll('.', '');
+  return secretstr;
 }
 
 Future<List> get_status(kernel_version) async {
   var url = Uri.parse(
       'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/');
-  var response = await http.get(url);
+  var response = await get(url);
   String amd64_status = 'success';
   String arm64_status = 'success';
 
@@ -53,10 +52,11 @@ Future<List> get_status(kernel_version) async {
 
 Future<void> valid(url, kernel_version) async {
   try {
-    final response = await http.get(Uri.parse(url));
+    final response = await get(Uri.parse(url));
     if (response.statusCode == 200) {
     } else {
-      print('$kernel_version not found on kernel.ubuntu.com try another one.');
+      String error_4_message = error_4.replaceAll("%kernel", kernel_version);
+      print(error_4_message);
       get_version();
     }
   } catch (error) {
@@ -64,8 +64,8 @@ Future<void> valid(url, kernel_version) async {
   }
 }
 
-download_deb(url, name) async {
+download_file(url, name) async {
   Response response = await get(Uri.parse(url));
-  File file = File('/tmp/tridentdownloadcache/$name');
+  File file = File('$path/$name');
   file.writeAsBytes(response.bodyBytes);
-}
+}
