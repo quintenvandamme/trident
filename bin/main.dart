@@ -7,7 +7,7 @@ import 'package:Trident/globals/error.dart';
 import "package:system_info/system_info.dart";
 
 String trident_version = '0.0.3';
-String trident_prerelease_version = '-rc1';
+String trident_prerelease_version = '-rc2';
 
 void main(arguments) async {
   var gpuinfo = await get_gpuinfo();

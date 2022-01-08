@@ -25,12 +25,16 @@ void install_wsl(kernel_version, kernel_type) async {
   String? system_kernel = SysInfo.kernelVersion;
   if (system_kernel.contains('WSL2')) {
     system_kernel = system_kernel.replaceAll('-microsoft-standard-WSL2', '');
+    void wrtite_catalog(str, file) {
+      new File(file).writeAsStringSync(str, mode: FileMode.append);
+    }
+
     get_username() async {
-      var sex1 = await Process.run(
+      var runpwd = await Process.run(
         'pwd',
         [''],
       );
-      var pwd = sex1.stdout;
+      var pwd = runpwd.stdout;
       var name = pwd.split('/mnt/c/Users/');
       name = name[1].trim();
       name = name.split('/');
@@ -38,8 +42,18 @@ void install_wsl(kernel_version, kernel_type) async {
       return name;
     }
 
+    get_threads() {
+      var processors = SysInfo.processors;
+      var threads = processors.length;
+      threads = threads - 2;
+      return threads;
+    }
+
     install_1(download_link, file_extension) async {
       var username = await get_username();
+      var threads = get_threads();
+      var slash_part = '\\';
+      var slash = '$slash_part$slash_part';
       await download_file(download_link, '/wsl2/kernel$file_extension');
       await shell
           .run('''tar -xf $path/wsl2/kernel$file_extension -C $path/wsl2/''');
@@ -48,15 +62,28 @@ void install_wsl(kernel_version, kernel_type) async {
           '/wsl2/config-wsl');
       Directory.current = '$path/wsl2/';
       await shell.run(
-          '''sed -i 's+CONFIG_LOCALVERSION="-microsoft-standard-WSL2"+CONFIG_LOCALVERSION="-trident-WSL2"' config-wsl''');
+          '''sudo apt-get install -y dwarves libncurses-dev gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf''');
+      await shell.run(
+          '''sed -i 's+CONFIG_LOCALVERSION="-microsoft-standard-WSL2"+CONFIG_LOCALVERSION="-trident-WSL2"+gI' config-wsl''');
       await shell.run(
           '''mv $path/wsl2/config-wsl $path/wsl2/linux-$kernel_version/arch/x86/configs/wsl_defconfig''');
       Directory.current = '$path/wsl2/linux-$kernel_version/';
       await shell.run('''make wsl_defconfig''');
-      await shell.run('''make -j \$(nproc)''');
-      await shell.run('''echo "[wsl2]" >> /mnt/c/Users/$username/.wslconfig''');
+      await shell.run('''make -j$threads''');
       await shell.run(
-          '''echo "kernel=C:\\Users\\$username\\vmlinux" >> /mnt/c/Users/$username/.wslconfig''');
+          '''cp $path/wsl2/linux-$kernel_version/arch/x86/boot/bzImage /mnt/c/Users/$username''');
+      await shell.run(
+          '''cp $path/wsl2/linux-$kernel_version/arch/x86/boot/vmlinux.bin /mnt/c/Users/$username''');
+      wrtite_catalog(
+          '[wsl2]\r\nkernel=C:' +
+              '$slash' +
+              'Users' +
+              '$slash' +
+              '$username' +
+              '$slash' +
+              'bzImage',
+          '/mnt/c/Users/$username/.wslconfig');
+
       print('Done building $kernel_version. Please reboot wsl');
     }
 
