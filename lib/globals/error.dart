@@ -6,3 +6,4 @@ String error_4 =
 String error_5 =
     '[error_5] wsl command can only be used to install wsl kernels on wsl2.';
 String error_6 = '[error_6] Nvidia cards are unsupported by trident.';
+String error_7 = '[error_7] File missing when building was complete.';

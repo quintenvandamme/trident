@@ -1,4 +1,3 @@
-import 'dart:io' show Platform;
 import 'package:Trident/version.dart';
 import 'package:Trident/install.dart';
 import 'package:Trident/catalog.dart';
@@ -7,7 +6,7 @@ import 'package:Trident/globals/error.dart';
 import "package:system_info/system_info.dart";
 
 String trident_version = '0.0.3';
-String trident_prerelease_version = '-rc2';
+String trident_prerelease_version = '-rc3';
 
 void main(arguments) async {
   var gpuinfo = await get_gpuinfo();
@@ -27,11 +26,20 @@ void main(arguments) async {
         } else if (arguments[1] == ' ') {
           print(error_1);
         } else {
-          var kernel_version = arguments[1];
-          var kernel_type = get_type(kernel_version);
-          var VER_STR = get_versionstring(kernel_version, kernel_type);
-          var VER_STAND = get_versionstandalone(kernel_version, kernel_type);
-          install_main(kernel_version, kernel_type, VER_STR, VER_STAND);
+          String? system_kernel = SysInfo.kernelVersion;
+          if (system_kernel.contains('WSL2')) {
+            print(
+                'Trident detected you are using WSL2 switched to --wsl instead.');
+            var kernel_version = arguments[1];
+            var kernel_type = get_type(kernel_version);
+            install_wsl(kernel_version, kernel_type);
+          } else {
+            var kernel_version = arguments[1];
+            var kernel_type = get_type(kernel_version);
+            var VER_STR = get_versionstring(kernel_version, kernel_type);
+            var VER_STAND = get_versionstandalone(kernel_version, kernel_type);
+            install_main(kernel_version, kernel_type, VER_STR, VER_STAND);
+          }
         }
       } else if (arguments[0] == '--catalog') {
         if (arguments[1] == null) {

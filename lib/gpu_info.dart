@@ -1,5 +1,4 @@
 import 'dart:io';
-import "package:system_info/system_info.dart";
 
 get_gpuinfo() async {
   var info = await Process.run(

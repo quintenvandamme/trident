@@ -54,6 +54,9 @@ void install_wsl(kernel_version, kernel_type) async {
       var threads = get_threads();
       var slash_part = '\\';
       var slash = '$slash_part$slash_part';
+      await remove_file('/mnt/c/Users/$username/vmlinux.bin');
+      await remove_file('/mnt/c/Users/$username/bzImage');
+      await remove_file('/mnt/c/Users/$username/.wslconfig');
       await download_file(download_link, '/wsl2/kernel$file_extension');
       await shell
           .run('''tar -xf $path/wsl2/kernel$file_extension -C $path/wsl2/''');
@@ -83,8 +86,40 @@ void install_wsl(kernel_version, kernel_type) async {
               '$slash' +
               'bzImage',
           '/mnt/c/Users/$username/.wslconfig');
-
-      print('Done building $kernel_version. Please reboot wsl');
+      var check1 = await file_status('/mnt/c/Users/$username/vmlinux.bin');
+      var check1_status = check1[0];
+      var check1_color = check1[1];
+      var check2 = await file_status('/mnt/c/Users/$username/bzImage');
+      var check2_status = check2[0];
+      var check2_color = check2[1];
+      var check3 = await file_status('/mnt/c/Users/$username/.wslconfig');
+      var check3_status = check3[0];
+      var check3_color = check3[1];
+      print('[' +
+          '$check1_color' +
+          ' $check1_status ' +
+          '\x1B[0m' +
+          '] vmlinux.bin');
+      print(
+          '[' + '$check2_color' + ' $check2_status ' + '\x1B[0m' + '] bzImage');
+      print('[' +
+          '$check3_color' +
+          ' $check3_status ' +
+          '\x1B[0m' +
+          '] .wslconfig');
+      if (check1_status == 'OK') {
+        if (check2_status == 'OK') {
+          if (check3_status == 'OK') {
+            print('Done building $kernel_version. Please reboot wsl');
+          } else {
+            print(error_7);
+          }
+        } else {
+          print(error_7);
+        }
+      } else {
+        print(error_7);
+      }
     }
 
     if (kernel_type == 'RC') {
@@ -109,6 +144,24 @@ Future<void> create_folder(folder) async {
   } else {
     await Directory(folder).create(recursive: true);
   }
+}
+
+Future<void> remove_file(file) async {
+  final pathexists = await File(file).exists();
+  if (pathexists == true) {
+    await File(file).delete(recursive: true);
+  }
+}
+
+Future file_status(file) async {
+  final pathexists = await File(file).exists();
+  var status = 'FAILED';
+  var color = '\x1B[31m';
+  if (pathexists == true) {
+    status = 'OK';
+    color = '\x1B[32m';
+  }
+  return [status, color];
 }
 
 installrc(kernel_version, kernel_type, VER_STR, VER_STAND) async {
