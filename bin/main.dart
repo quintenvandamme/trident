@@ -6,7 +6,7 @@ import 'package:Trident/globals/error.dart';
 import "package:system_info/system_info.dart";
 
 String trident_version = '0.0.3';
-String trident_prerelease_version = '-rc3';
+String trident_prerelease_version = '-rc4';
 
 void main(arguments) async {
   var gpuinfo = await get_gpuinfo();
@@ -89,6 +89,6 @@ void help() {
   print('--version               display version.');
   print('--help                  list all commands.');
   print('--install <kernel>      install specific kernel.');
-  print('--catalog <kernel>      catalog specific kernel.');
   print('--wsl <kernel>          install specific kernel for wsl2.');
+  print('--catalog <kernel>      catalog specific kernel.');
 }

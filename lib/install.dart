@@ -23,7 +23,7 @@ void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
 
 void install_wsl(kernel_version, kernel_type) async {
   String? system_kernel = SysInfo.kernelVersion;
-  if (system_kernel.contains('WSL2')) {
+  if (system_kernel.contains('-WSL2')) {
     system_kernel = system_kernel.replaceAll('-microsoft-standard-WSL2', '');
     void wrtite_catalog(str, file) {
       new File(file).writeAsStringSync(str, mode: FileMode.append);
@@ -288,6 +288,11 @@ installmainline(kernel_version, kernel_type, VER_STR, VER_STAND) async {
   var status = await get_status(kernel_version);
   var status_amd64 = status[0];
   var status_arm64 = status[1];
+
+  if (VER_STR.endsWith('00')) {
+    kernel_version = ('$kernel_version.0');
+  }
+
   if (status_amd64 == 'failed') {
     status_amd64_bit = 0;
   }
@@ -369,6 +374,11 @@ installmainline(kernel_version, kernel_type, VER_STR, VER_STAND) async {
   }
 
   install_2() async {
+    String? secretstr = get_secretstr(
+        'arm64/linux-headers-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR',
+        kernel_version);
+    print(secretstr);
+
     if (SysInfo.kernelArchitecture == 'x86_64') {
       await shell.run('''sudo dpkg -i *amd.deb''');
     } else {

@@ -1,13 +1,12 @@
 # trident
-The magic kernel manager for ubuntu based distros.
+The magic kernel manager for ubuntu based distros and WSL2.
 
-# testing
+## install
 
-- Make a cache directory for trident in /var/cache/
-```sudo mkdir /var/cache/trident/;sudo chown user:user /var/cache/trident/```
-- Get dependencies and run trident.
-```dart pub get```
-```dart bin/main.dart --install <kernel>```
+```curl -s https://raw.githubusercontent.com/quintenvandamme/trident/main/install.sh```
 
+## upgrade
 
-For help run `dart bin/main.dart --help`
+```sudo rm /usr/bin/trident;curl -s https://raw.githubusercontent.com/quintenvandamme/trident/main/install.sh```
+
+For help run `trident --help`

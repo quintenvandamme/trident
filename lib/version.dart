@@ -18,7 +18,10 @@ get_version() {
 }
 
 get_type(kernel_version) {
-  if (kernel_version.startsWith('5.10.')) {
+  if (kernel_version.startsWith('5.4.')) {
+    String kernel_type = 'LTS';
+    return kernel_type;
+  } else if (kernel_version.startsWith('5.10.')) {
     String kernel_type = 'LTS';
     return kernel_type;
   } else if (kernel_version.startsWith('5.15.')) {
@@ -48,6 +51,19 @@ get_versionstring(kernel_version, kernel_type) {
         VER_STR.substring(0, 3) + "0" + VER_STR.substring(3, VER_STR.length);
     VER_STR = '0$VER_STR';
     return VER_STR;
+  } else if (VER_STR.length == 3) {
+    if (kernel_version.length == 4) {
+      if (kernel_version.endsWith('.')) {
+        print(error_3);
+      } else {
+        VER_STR = VER_STR.substring(0, 3) +
+            "00" +
+            VER_STR.substring(3, VER_STR.length);
+        VER_STR = '0$VER_STR';
+        print(VER_STR);
+        return VER_STR;
+      }
+    }
   }
 }
 
