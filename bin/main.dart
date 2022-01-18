@@ -3,24 +3,28 @@ import 'package:Trident/install.dart';
 import 'package:Trident/catalog.dart';
 import 'package:Trident/gpu_info.dart';
 import 'package:Trident/globals/error.dart';
+import 'package:Trident/globals/path.dart';
 import "package:system_info/system_info.dart";
 
 String trident_version = '0.0.3';
-String trident_prerelease_version = '-rc4';
+String trident_prerelease_version = '-rc5';
 
 void main(arguments) async {
   var gpuinfo = await get_gpuinfo();
   if (gpuinfo == 1) {
     print(error_6);
   } else {
-    await create_folder(path);
-    await create_folder('$path/wsl2');
+    await create_folder(path, 'false');
+    await create_folder(path_download, 'true');
+    await create_folder('$path_download/wsl2', 'true');
     try {
       if (arguments[0] == '--version') {
         version();
-      } else if (arguments[0] == '--help') {
+      } else if (arguments[0] == '-version') {
+        version();
+      } else if (arguments[0] == '-help') {
         help();
-      } else if (arguments[0] == '--install') {
+      } else if (arguments[0] == '-install') {
         if (arguments[1] == null) {
           print(error_1);
         } else if (arguments[1] == ' ') {
@@ -29,7 +33,7 @@ void main(arguments) async {
           String? system_kernel = SysInfo.kernelVersion;
           if (system_kernel.contains('WSL2')) {
             print(
-                'Trident detected you are using WSL2 switched to --wsl instead.');
+                'Trident detected you are using WSL2 switched to -wsl instead.');
             var kernel_version = arguments[1];
             var kernel_type = get_type(kernel_version);
             install_wsl(kernel_version, kernel_type);
@@ -41,7 +45,7 @@ void main(arguments) async {
             install_main(kernel_version, kernel_type, VER_STR, VER_STAND);
           }
         }
-      } else if (arguments[0] == '--catalog') {
+      } else if (arguments[0] == '-catalog') {
         if (arguments[1] == null) {
           print(error_1);
         } else if (arguments[1] == ' ') {
@@ -53,7 +57,7 @@ void main(arguments) async {
           var VER_STAND = get_versionstandalone(kernel_version, kernel_type);
           catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
         }
-      } else if (arguments[0] == '--wsl') {
+      } else if (arguments[0] == '-wsl') {
         if (arguments[1] == null) {
           print(error_1);
         } else if (arguments[1] == ' ') {
@@ -63,6 +67,27 @@ void main(arguments) async {
           var kernel_type = get_type(kernel_version);
           install_wsl(kernel_version, kernel_type);
         }
+      } else if (arguments[0] == '-compile') {
+        if (arguments[1] == null) {
+          print(error_1);
+        } else if (arguments[1] == ' ') {
+          print(error_1);
+        } else {
+          String? system_kernel = SysInfo.kernelVersion;
+          if (system_kernel.contains('WSL2')) {
+            print(
+                'Trident detected you are using WSL2 switched to -wsl instead.');
+            var kernel_version = arguments[1];
+            var kernel_type = get_type(kernel_version);
+            install_wsl(kernel_version, kernel_type);
+          } else {
+            var kernel_version = arguments[1];
+            var kernel_type = get_type(kernel_version);
+            compile_main(kernel_version, kernel_type);
+          }
+        }
+      } else if (arguments[0].startsWith('--')) {
+        print(error_8);
       }
     } catch (error) {
       print(error_2);
@@ -86,9 +111,10 @@ void version() {
 }
 
 void help() {
-  print('--version               display version.');
-  print('--help                  list all commands.');
-  print('--install <kernel>      install specific kernel.');
-  print('--wsl <kernel>          install specific kernel for wsl2.');
-  print('--catalog <kernel>      catalog specific kernel.');
+  print('--version              display version.');
+  print('-help                  list all commands.');
+  print('-install <kernel>      install specific kernel from binary.');
+  print('-compile <kernel>      build and install specific kernel.');
+  print('-wsl <kernel>          build and install specific kernel for wsl2.');
+  print('-catalog <kernel>      catalog specific kernel.');
 }

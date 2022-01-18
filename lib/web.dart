@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:core';
 import 'package:Trident/globals/error.dart';
+import 'package:Trident/globals/path.dart';
 import 'package:Trident/version.dart';
-import 'package:Trident/install.dart';
 import 'package:http/http.dart';
 
-String PULL_FILE = '/var/cache/trident/pull_file.txt';
+String PULL_FILE = '$path_download/pull_file.txt';
 
 get_file(kernel_version) async {
   final request = await HttpClient().getUrl(Uri.parse(
@@ -66,6 +66,6 @@ Future<void> valid(url, kernel_version) async {
 
 download_file(url, name) async {
   Response response = await get(Uri.parse(url));
-  File file = File('$path/$name');
+  File file = File('$path_download/$name');
   file.writeAsBytes(response.bodyBytes);
 }

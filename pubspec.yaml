@@ -1,5 +1,5 @@
 name: Trident
-version: 0.0.3-rc4
+version: 0.0.3-rc5
 description: >-
   The magic kernel manager.
 environment:
@@ -8,4 +8,3 @@ dependencies:
   http: ^0.13.4
   process_run: ^0.12.2+2
   system_info: ^1.0.1
-  trident: ^1.0.0

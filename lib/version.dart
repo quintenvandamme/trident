@@ -60,7 +60,6 @@ get_versionstring(kernel_version, kernel_type) {
             "00" +
             VER_STR.substring(3, VER_STR.length);
         VER_STR = '0$VER_STR';
-        print(VER_STR);
         return VER_STR;
       }
     }

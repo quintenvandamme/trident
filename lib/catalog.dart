@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:Trident/web.dart';
+import 'package:Trident/globals/path.dart';
 
 void catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
   if (kernel_type == 'RC') {
@@ -132,6 +133,6 @@ void mainline(kernel_version, kernel_type, VER_STR, VER_STAND) async {
 }
 
 wrtite_catalog(str) {
-  final script_name = '/var/cache/trident/list.text';
+  final script_name = '$path_download/list.text';
   new File(script_name).writeAsStringSync(str, mode: FileMode.append);
 }
