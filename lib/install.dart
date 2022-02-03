@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:Trident/web.dart';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/globals/path.dart';
-import "package:system_info/system_info.dart";
+import 'package:system_info2/system_info2.dart';
 import 'package:process_run/shell.dart';
 
 var shell = Shell();
@@ -23,7 +23,7 @@ void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
 
 void compile_main(kernel_version, kernel_type) async {
   get_threads() {
-    var processors = SysInfo.processors;
+    var processors = SysInfo.cores;
     var threads = processors.length;
     threads = threads - 2;
     return threads;
@@ -40,10 +40,16 @@ void compile_main(kernel_version, kernel_type) async {
         '''sudo apt-get install -y dwarves libncurses-dev gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf''');
     Directory.current = '$path_download/linux/linux-$kernel_version/';
     await shell.run('''sudo cp /boot/config-$system_kernel ./.config''');
+    await shell.run(
+        '''sed -i 's+CONFIG_SYSTEM_TRUSTED_KEYS="debian/canonical-certs.pem"+CONFIG_SYSTEM_TRUSTED_KEYS=""+gI' ./.config''');
+    await shell.run(
+        '''sed -i 's+CONFIG_SYSTEM_REVOCATION_KEYS="debian/canonical-revoked-certs.pem"+CONFIG_SYSTEM_REVOCATION_KEYS=""+gI' ./.config''');
+    await shell.run(
+        '''sed -i 's+CONFIG_LOCALVERSION=""+CONFIG_LOCALVERSION="-trident"+gI' ./.config''');
     await shell.run('''make -j$threads''');
     await shell.run('''sudo make modules_install''');
     await shell.run('''sudo make install''');
-    print('Done building linux $kernel_version. Please reboot');
+    print('Done building linux $kernel_version. Please reboot your system');
   }
 
   compile_rc(kernel_version, kernel_type) async {
@@ -87,7 +93,7 @@ void install_wsl(kernel_version, kernel_type) async {
     }
 
     get_threads() {
-      var processors = SysInfo.processors;
+      var processors = SysInfo.cores;
       var threads = processors.length;
       threads = threads - 2;
       return threads;
@@ -205,6 +211,13 @@ Future<void> remove_file(file) async {
   }
 }
 
+Future<void> remove_file_root(file) async {
+  final path_downloadexists = await File(file).exists();
+  if (path_downloadexists == true) {
+    await shell.run('''sudo rm $file''');
+  }
+}
+
 Future file_status(file) async {
   final path_downloadexists = await File(file).exists();
   var status = 'FAILED';
@@ -217,6 +230,7 @@ Future file_status(file) async {
 }
 
 install_2() async {
+  Directory.current = '$path_download';
   if (SysInfo.kernelArchitecture == 'x86_64') {
     await shell.run('''sudo dpkg -i *amd.deb''');
   } else if (SysInfo.kernelArchitecture == 'ARM') {

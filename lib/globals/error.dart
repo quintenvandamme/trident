@@ -9,3 +9,5 @@ String error_6 = '[error_6] Nvidia cards are unsupported by trident.';
 String error_7 = '[error_7] File missing when building was complete.';
 String error_8 =
     '[error_8] Run the command with only one - or run -help to list all the commands.';
+String error_9 =
+    '[error_9] Failed to fetch latest release: can\'t check for updates.';

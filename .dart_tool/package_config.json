@@ -20,8 +20,26 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "cli_dialog",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/cli_dialog-0.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "collection",
       "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "dart_console",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/dart_console-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "ffi",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/ffi-1.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -63,7 +81,7 @@
     },
     {
       "name": "process_run",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/process_run-0.12.3+1",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/process_run-0.12.3+2",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -92,8 +110,8 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "system_info",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/system_info-1.0.1",
+      "name": "system_info2",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/system_info2-2.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -110,6 +128,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "win32",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/win32-2.3.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "yaml",
       "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/yaml-3.1.0",
       "packageUri": "lib/",
@@ -122,7 +146,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-01-16T17:49:05.085246Z",
+  "generated": "2022-02-03T19:02:24.399570Z",
   "generator": "pub",
-  "generatorVersion": "2.15.1"
+  "generatorVersion": "2.16.0"
 }

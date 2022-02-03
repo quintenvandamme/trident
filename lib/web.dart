@@ -35,6 +35,18 @@ get_secretstr(link_content, kernel_version) {
   return secretstr;
 }
 
+Future get_latestrelease(repo) async {
+  var url = Uri.parse('https://api.github.com/repos/$repo/releases');
+  var response = await get(url);
+  String? responsetostr = response.body.toString();
+  var getlatestrelease_1 =
+      responsetostr.split('"html_url":"https://github.com/$repo/releases/tag/');
+  var getlatestrelease_2 = getlatestrelease_1[1].trim();
+  var getlatestrelease_3 = getlatestrelease_2.split('","');
+  var getlatestrelease = getlatestrelease_3[0].trim();
+  return getlatestrelease;
+}
+
 Future<List> get_status(kernel_version) async {
   var url = Uri.parse(
       'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/');
