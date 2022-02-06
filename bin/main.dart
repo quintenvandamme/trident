@@ -1,4 +1,5 @@
 import 'package:Trident/version.dart';
+import 'package:Trident/latest.dart';
 import 'package:Trident/install.dart';
 import 'package:Trident/catalog.dart';
 import 'package:Trident/gpu_info.dart';
@@ -9,111 +10,297 @@ import 'package:Trident/globals/package_info.dart';
 import 'package:system_info2/system_info2.dart';
 
 void main(arguments) async {
-  var gpuinfo = await get_gpuinfo();
-  if (gpuinfo == 1) {
-    print(error_6);
-  } else {
-    try {
-      var update_status = await checkforupdate();
-      if (update_status == 1) {
-        var update_status = prompt_update();
-        if (update_status == true) {
-          await update();
+  void wsl() async {
+    var kernel = arguments[1];
+    switch (kernel) {
+      case "-latest-mainline":
+        {
+          var kernel_version = await latest_mainline_kernel();
+          var kernel_type = get_type(kernel_version);
+          install_wsl(kernel_version, kernel_type);
         }
-      }
-    } catch (error) {
-      print(error_9);
+        break;
+
+      case "-latest-rc":
+        {
+          var kernel_version = await latest_rc_kernel();
+          var kernel_type = get_type(kernel_version);
+          install_wsl(kernel_version, kernel_type);
+        }
+        break;
+
+      case "-latest-lts":
+        {
+          var kernel_version = await latest_lts_kernel();
+          var kernel_type = get_type(kernel_version);
+          install_wsl(kernel_version, kernel_type);
+        }
+        break;
+
+      default:
+        {
+          var kernel_version = arguments[1];
+          var kernel_type = get_type(kernel_version);
+          install_wsl(kernel_version, kernel_type);
+        }
+        break;
     }
+  }
+
+  void commands() async {
     await create_folder(path, 'false');
     await create_folder(path_download, 'true');
     await create_folder('$path_download/wsl2', 'true');
     await create_folder('$path_download/linux', 'true');
     try {
-      if (arguments[0] == '--version') {
-        version();
-      } else if (arguments[0] == '-version') {
-        version();
-      } else if (arguments[0] == '-help') {
-        help();
-      } else if (arguments[0] == '-install') {
-        if (arguments[1] == null) {
-          print(error_1);
-        } else if (arguments[1] == ' ') {
-          print(error_1);
-        } else {
-          String system_kernel = SysInfo.kernelVersion;
-          if (system_kernel.contains('WSL2')) {
-            print(
-                'Trident detected you are using WSL2 switched to -wsl instead.');
-            var kernel_version = arguments[1];
-            var kernel_type = get_type(kernel_version);
-            install_wsl(kernel_version, kernel_type);
-          } else {
-            var kernel_version = arguments[1];
-            var kernel_type = get_type(kernel_version);
-            var VER_STR = get_versionstring(kernel_version, kernel_type);
-            var VER_STAND = get_versionstandalone(kernel_version, kernel_type);
-            install_main(kernel_version, kernel_type, VER_STR, VER_STAND);
+      var command = arguments[0];
+      switch (command) {
+        case "--version":
+          {
+            version();
           }
-        }
-      } else if (arguments[0] == '-catalog') {
-        if (arguments[1] == null) {
-          print(error_1);
-        } else if (arguments[1] == ' ') {
-          print(error_1);
-        } else {
-          var kernel_version = arguments[1];
-          var kernel_type = get_type(kernel_version);
-          var VER_STR = get_versionstring(kernel_version, kernel_type);
-          var VER_STAND = get_versionstandalone(kernel_version, kernel_type);
-          catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
-        }
-      } else if (arguments[0] == '-update') {
-        try {
-          var update_status = await checkforupdate();
-          if (update_status == 1) {
-            await update();
-          } else {
-            print('No updates found.');
+          break;
+
+        case "-version":
+          {
+            version();
           }
-        } catch (error) {
-          print(error_9);
-        }
-      } else if (arguments[0] == '-wsl') {
-        if (arguments[1] == null) {
-          print(error_1);
-        } else if (arguments[1] == ' ') {
-          print(error_1);
-        } else {
-          var kernel_version = arguments[1];
-          var kernel_type = get_type(kernel_version);
-          install_wsl(kernel_version, kernel_type);
-        }
-      } else if (arguments[0] == '-compile') {
-        if (arguments[1] == null) {
-          print(error_1);
-        } else if (arguments[1] == ' ') {
-          print(error_1);
-        } else {
-          String system_kernel = SysInfo.kernelVersion;
-          if (system_kernel.contains('WSL2')) {
-            print(
-                'Trident detected you are using WSL2 switched to -wsl instead.');
-            var kernel_version = arguments[1];
-            var kernel_type = get_type(kernel_version);
-            install_wsl(kernel_version, kernel_type);
-          } else {
-            var kernel_version = arguments[1];
-            var kernel_type = get_type(kernel_version);
-            compile_main(kernel_version, kernel_type);
+          break;
+
+        case "-help":
+          {
+            help();
           }
-        }
-      } else if (arguments[0].startsWith('--')) {
-        print(error_8);
+          break;
+
+        case "-compile":
+          {
+            var kernel = arguments[1];
+            String system_kernel = SysInfo.kernelVersion;
+            if (system_kernel.contains('WSL2')) {
+              print(
+                  'Trident detected you are using WSL2 switched to -wsl instead.');
+              wsl();
+            } else {
+              switch (kernel) {
+                case "-latest-mainline":
+                  {
+                    var kernel_version = await latest_mainline_kernel();
+                    var kernel_type = get_type(kernel_version);
+                    compile_main(kernel_version, kernel_type);
+                  }
+                  break;
+
+                case "-latest-rc":
+                  {
+                    var kernel_version = await latest_rc_kernel();
+                    var kernel_type = get_type(kernel_version);
+                    compile_main(kernel_version, kernel_type);
+                  }
+                  break;
+
+                case "-latest-lts":
+                  {
+                    var kernel_version = await latest_lts_kernel();
+                    var kernel_type = get_type(kernel_version);
+                    compile_main(kernel_version, kernel_type);
+                  }
+                  break;
+
+                default:
+                  {
+                    var kernel_version = arguments[1];
+                    var kernel_type = get_type(kernel_version);
+                    compile_main(kernel_version, kernel_type);
+                  }
+                  break;
+              }
+            }
+          }
+          break;
+
+        case "-install":
+          {
+            var kernel = arguments[1];
+            String system_kernel = SysInfo.kernelVersion;
+            if (system_kernel.contains('WSL2')) {
+              print(
+                  'Trident detected you are using WSL2 switched to -wsl instead.');
+              wsl();
+            } else {
+              switch (kernel) {
+                case "-latest-mainline":
+                  {
+                    var kernel_version = await latest_mainline_kernel();
+                    var kernel_type = get_type(kernel_version);
+                    var VER_STR =
+                        get_versionstring(kernel_version, kernel_type);
+                    var VER_STAND =
+                        get_versionstandalone(kernel_version, kernel_type);
+                    install_main(
+                        kernel_version, kernel_type, VER_STR, VER_STAND);
+                  }
+                  break;
+
+                case "-latest-rc":
+                  {
+                    var kernel_version = await latest_rc_kernel();
+                    var kernel_type = get_type(kernel_version);
+                    var VER_STR =
+                        get_versionstring(kernel_version, kernel_type);
+                    var VER_STAND =
+                        get_versionstandalone(kernel_version, kernel_type);
+                    install_main(
+                        kernel_version, kernel_type, VER_STR, VER_STAND);
+                  }
+                  break;
+
+                case "-latest-lts":
+                  {
+                    var kernel_version = await latest_lts_kernel();
+                    var kernel_type = get_type(kernel_version);
+                    var VER_STR =
+                        get_versionstring(kernel_version, kernel_type);
+                    var VER_STAND =
+                        get_versionstandalone(kernel_version, kernel_type);
+                    install_main(
+                        kernel_version, kernel_type, VER_STR, VER_STAND);
+                  }
+                  break;
+
+                default:
+                  {
+                    var kernel_version = arguments[1];
+                    var kernel_type = get_type(kernel_version);
+                    var VER_STR =
+                        get_versionstring(kernel_version, kernel_type);
+                    var VER_STAND =
+                        get_versionstandalone(kernel_version, kernel_type);
+                    install_main(
+                        kernel_version, kernel_type, VER_STR, VER_STAND);
+                  }
+                  break;
+              }
+            }
+          }
+          break;
+
+        case "-catalog":
+          {
+            var kernel = arguments[1];
+            switch (kernel) {
+              case "-latest-mainline":
+                {
+                  var kernel_version = await latest_mainline_kernel();
+                  var kernel_type = get_type(kernel_version);
+                  var VER_STR = get_versionstring(kernel_version, kernel_type);
+                  var VER_STAND =
+                      get_versionstandalone(kernel_version, kernel_type);
+                  catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
+                }
+                break;
+
+              case "-latest-rc":
+                {
+                  var kernel_version = await latest_rc_kernel();
+                  var kernel_type = get_type(kernel_version);
+                  var VER_STR = get_versionstring(kernel_version, kernel_type);
+                  var VER_STAND =
+                      get_versionstandalone(kernel_version, kernel_type);
+                  catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
+                }
+                break;
+
+              case "-latest-lts":
+                {
+                  var kernel_version = await latest_lts_kernel();
+                  var kernel_type = get_type(kernel_version);
+                  var VER_STR = get_versionstring(kernel_version, kernel_type);
+                  var VER_STAND =
+                      get_versionstandalone(kernel_version, kernel_type);
+                  catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
+                }
+                break;
+
+              default:
+                {
+                  var kernel_version = arguments[1];
+                  var kernel_type = get_type(kernel_version);
+                  var VER_STR = get_versionstring(kernel_version, kernel_type);
+                  var VER_STAND =
+                      get_versionstandalone(kernel_version, kernel_type);
+                  catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
+                }
+                break;
+            }
+          }
+          break;
+
+        case "-update":
+          {
+            try {
+              var update_status = await checkforupdate();
+              switch (update_status) {
+                case 1:
+                  {
+                    await update();
+                  }
+                  break;
+                default:
+                  {
+                    print('No updates found.');
+                  }
+                  break;
+              }
+            } catch (error) {
+              print(error_9);
+            }
+          }
+          break;
+
+        case "-wsl":
+          {
+            wsl();
+          }
+          break;
       }
     } catch (error) {
       print(error_2);
     }
+  }
+
+  var gpuinfo = await get_gpuinfo();
+  switch (gpuinfo) {
+    case 1:
+      {
+        print(error_6);
+      }
+      break;
+    case 0:
+      {
+        try {
+          var update_status = await checkforupdate();
+          switch (update_status) {
+            case 1:
+              {
+                var update_status = prompt_update();
+                if (update_status == true) {
+                  await update();
+                  commands();
+                }
+              }
+              break;
+            default:
+              {
+                commands();
+              }
+              break;
+          }
+        } catch (error) {
+          print(error_9);
+          commands();
+        }
+      }
   }
 }
 

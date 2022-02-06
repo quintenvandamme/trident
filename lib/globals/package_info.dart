@@ -1,2 +1,2 @@
-String trident_version = '0.0.3';
-String trident_prerelease_version = '';
+String trident_version = '0.0.4';
+String trident_prerelease_version = '-rc1';
