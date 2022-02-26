@@ -1,12 +1,14 @@
 import 'package:Trident/version.dart';
 import 'package:Trident/latest.dart';
-import 'package:Trident/install.dart';
 import 'package:Trident/catalog.dart';
-import 'package:Trident/gpu_info.dart';
+import 'package:Trident/file_handeler.dart';
+import 'package:Trident/system.dart';
 import 'package:Trident/update.dart';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/globals/path.dart';
 import 'package:Trident/globals/package_info.dart';
+import 'package:Trident/install/generic/main.dart';
+import 'package:Trident/install/wsl/main.dart';
 import 'package:system_info2/system_info2.dart';
 
 void main(arguments) async {
@@ -69,7 +71,8 @@ void main(arguments) async {
 
         case "-help":
           {
-            help();
+            print(
+                '--version              display version.\n-help                  list all commands.\n-update                check and install updates.\n-install <kernel>      install specific kernel from binary.\n-compile <kernel>      build and install specific kernel.\n-wsl <kernel>          build and install specific kernel for wsl2.\n-catalog <kernel>      catalog specific kernel.');
           }
           break;
 
@@ -271,12 +274,12 @@ void main(arguments) async {
 
   var gpuinfo = await get_gpuinfo();
   switch (gpuinfo) {
-    case 1:
+    case true:
       {
         print(error_6);
       }
       break;
-    case 0:
+    case false:
       {
         try {
           var update_status = await checkforupdate();
@@ -316,14 +319,4 @@ void version() {
   print('     | |');
   print('     | |');
   print('     \\_/' + '\x1B[0m');
-}
-
-void help() {
-  print('--version              display version.');
-  print('-help                  list all commands.');
-  print('-update                check and install updates.');
-  print('-install <kernel>      install specific kernel from binary.');
-  print('-compile <kernel>      build and install specific kernel.');
-  print('-wsl <kernel>          build and install specific kernel for wsl2.');
-  print('-catalog <kernel>      catalog specific kernel.');
 }

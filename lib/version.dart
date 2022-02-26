@@ -38,31 +38,57 @@ get_type(kernel_version) {
 
 get_versionstring(kernel_version, kernel_type) {
   var VER_STR = kernel_version.replaceAll(new RegExp(r'[^\w\s]+'), '');
-  if (kernel_type == 'RC') {
-    VER_STR =
-        VER_STR.substring(0, 3) + "00" + VER_STR.substring(3, VER_STR.length);
-    VER_STR = '0$VER_STR';
-    return VER_STR;
-  } else if (VER_STR.length == 5) {
-    VER_STR = '0$VER_STR';
-    return VER_STR;
-  } else if (VER_STR.length == 4) {
-    VER_STR =
-        VER_STR.substring(0, 3) + "0" + VER_STR.substring(3, VER_STR.length);
-    VER_STR = '0$VER_STR';
-    return VER_STR;
-  } else if (VER_STR.length == 3) {
-    if (kernel_version.length == 4) {
-      if (kernel_version.endsWith('.')) {
-        print(error_3);
-      } else {
+
+  switch (kernel_type) {
+    case "RC":
+      {
         VER_STR = VER_STR.substring(0, 3) +
             "00" +
             VER_STR.substring(3, VER_STR.length);
         VER_STR = '0$VER_STR';
         return VER_STR;
       }
-    }
+    default:
+      {
+        switch (VER_STR.length) {
+          case 5:
+            {
+              VER_STR = '0$VER_STR';
+              return VER_STR;
+            }
+          case 4:
+            {
+              VER_STR = VER_STR.substring(0, 3) +
+                  "0" +
+                  VER_STR.substring(3, VER_STR.length);
+              VER_STR = '0$VER_STR';
+              return VER_STR;
+            }
+          case 3:
+            {
+              switch (kernel_version.length) {
+                case 4:
+                  {
+                    switch (kernel_version.endsWith) {
+                      case ".":
+                        {
+                          print(error_3);
+                        }
+                        break;
+                      default:
+                        {
+                          VER_STR = VER_STR.substring(0, 3) +
+                              "00" +
+                              VER_STR.substring(3, VER_STR.length);
+                          VER_STR = '0$VER_STR';
+                          return VER_STR;
+                        }
+                    }
+                  }
+              }
+            }
+        }
+      }
   }
 }
 

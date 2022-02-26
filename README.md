@@ -21,3 +21,9 @@ The magic kernel manager for ubuntu based distros and WSL2.
 | -compile **[kernel]** | build and install specific kernel.           |
 | -wsl **[kernel]**     | build and install specific kernel for wsl2.  |
 | -catalog **[kernel]** | catalog specific kernel.                     |
+
+You can replace **[kernel]** with:
+- a specific kernel version like 5.16.2 or 5.17-rc5
+- -latest-rc
+- -latest-mainline
+- -latest-lts
