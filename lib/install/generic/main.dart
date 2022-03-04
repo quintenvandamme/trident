@@ -4,7 +4,8 @@ import 'package:Trident/install/generic/x86_64.dart';
 import 'package:Trident/install/generic/arm64.dart';
 import 'package:system_info2/system_info2.dart';
 
-void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
+void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) async {
+  await get_file(kernel_version);
   String? secretstr = get_secretstr(
       'arm64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR',
       kernel_version);
@@ -14,18 +15,14 @@ void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
         switch (kernel_type) {
           case "RC":
             {
-              get_file(kernel_version).whenComplete(() {
-                installrc_x86_64(
-                    kernel_version, kernel_type, VER_STR, VER_STAND, secretstr);
-              });
+              await installrc_x86_64(
+                  kernel_version, kernel_type, VER_STR, VER_STAND, secretstr);
             }
             break;
           default:
             {
-              get_file(kernel_version).whenComplete(() {
-                installmainline_x86_64(
-                    kernel_version, kernel_type, VER_STR, VER_STAND, secretstr);
-              });
+              await installmainline_x86_64(
+                  kernel_version, kernel_type, VER_STR, VER_STAND, secretstr);
             }
             break;
         }
@@ -37,18 +34,14 @@ void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
         switch (kernel_type) {
           case "RC":
             {
-              get_file(kernel_version).whenComplete(() {
-                installrc_arm64(
-                    kernel_version, kernel_type, VER_STR, VER_STAND, secretstr);
-              });
+              await installrc_arm64(
+                  kernel_version, kernel_type, VER_STR, VER_STAND, secretstr);
             }
             break;
           default:
             {
-              get_file(kernel_version).whenComplete(() {
-                installmainline_arm64(
-                    kernel_version, kernel_type, VER_STR, VER_STAND, secretstr);
-              });
+              await installmainline_arm64(
+                  kernel_version, kernel_type, VER_STR, VER_STAND, secretstr);
             }
             break;
         }

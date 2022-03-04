@@ -9,7 +9,7 @@ The magic kernel manager for ubuntu based distros and WSL2.
 
 ## install
 
-```sudo mkdir /var/cache/trident/ && sudo chown $USER:$USER /var/cache/trident/ && sudo wget https://github.com/quintenvandamme/trident/releases/download/0.0.4-rc1/trident -P /usr/bin/ && sudo chmod +x /usr/bin/trident```
+```sudo mkdir /var/cache/trident/ && sudo chmod 777 /var/cache/trident/ && sudo wget https://github.com/quintenvandamme/trident/releases/download/0.0.4-rc3/trident -P /usr/bin/ && sudo chmod +x /usr/bin/trident```
 
 ## usage
 
@@ -17,6 +17,7 @@ The magic kernel manager for ubuntu based distros and WSL2.
 |-----------------------|----------------------------------------------|
 | --version             | display version.                             |
 | -help                 | list all commands.                           |
+| -update               | check for and install updates.               |
 | -install **[kernel]** | install specific kernel from binary.         |
 | -compile **[kernel]** | build and install specific kernel.           |
 | -wsl **[kernel]**     | build and install specific kernel for wsl2.  |

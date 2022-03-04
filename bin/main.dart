@@ -72,7 +72,7 @@ void main(arguments) async {
         case "-help":
           {
             print(
-                '--version              display version.\n-help                  list all commands.\n-update                check and install updates.\n-install <kernel>      install specific kernel from binary.\n-compile <kernel>      build and install specific kernel.\n-wsl <kernel>          build and install specific kernel for wsl2.\n-catalog <kernel>      catalog specific kernel.');
+                '--version              display version.\n-help                  list all commands.\n-update                check for and install updates.\n-install <kernel>      install specific kernel from binary.\n-compile <kernel>      build and install specific kernel.\n-wsl <kernel>          build and install specific kernel for wsl2.\n-catalog <kernel>      catalog specific kernel.');
           }
           break;
 
