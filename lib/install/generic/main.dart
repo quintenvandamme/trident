@@ -5,7 +5,6 @@ import 'package:Trident/install/generic/arm64.dart';
 import 'package:system_info2/system_info2.dart';
 
 void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) async {
-  await get_file(kernel_version);
   String? secretstr = get_secretstr(
       'arm64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR',
       kernel_version);

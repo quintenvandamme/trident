@@ -15,7 +15,7 @@ void main(arguments) async {
   void wsl() async {
     var kernel = arguments[1];
     switch (kernel) {
-      case "-latest-mainline":
+      case "latest_mainline":
         {
           var kernel_version = await latest_mainline_kernel();
           var kernel_type = get_type(kernel_version);
@@ -23,7 +23,7 @@ void main(arguments) async {
         }
         break;
 
-      case "-latest-rc":
+      case "latest_rc":
         {
           var kernel_version = await latest_rc_kernel();
           var kernel_type = get_type(kernel_version);
@@ -31,7 +31,7 @@ void main(arguments) async {
         }
         break;
 
-      case "-latest-lts":
+      case "latest_lts":
         {
           var kernel_version = await latest_lts_kernel();
           var kernel_type = get_type(kernel_version);
@@ -86,7 +86,7 @@ void main(arguments) async {
               wsl();
             } else {
               switch (kernel) {
-                case "-latest-mainline":
+                case "latest_mainline":
                   {
                     var kernel_version = await latest_mainline_kernel();
                     var kernel_type = get_type(kernel_version);
@@ -94,7 +94,7 @@ void main(arguments) async {
                   }
                   break;
 
-                case "-latest-rc":
+                case "latest_rc":
                   {
                     var kernel_version = await latest_rc_kernel();
                     var kernel_type = get_type(kernel_version);
@@ -102,7 +102,7 @@ void main(arguments) async {
                   }
                   break;
 
-                case "-latest-lts":
+                case "latest_lts":
                   {
                     var kernel_version = await latest_lts_kernel();
                     var kernel_type = get_type(kernel_version);
@@ -132,7 +132,7 @@ void main(arguments) async {
               wsl();
             } else {
               switch (kernel) {
-                case "-latest-mainline":
+                case "latest_mainline":
                   {
                     var kernel_version = await latest_mainline_kernel();
                     var kernel_type = get_type(kernel_version);
@@ -145,7 +145,7 @@ void main(arguments) async {
                   }
                   break;
 
-                case "-latest-rc":
+                case "latest_rc":
                   {
                     var kernel_version = await latest_rc_kernel();
                     var kernel_type = get_type(kernel_version);
@@ -158,7 +158,7 @@ void main(arguments) async {
                   }
                   break;
 
-                case "-latest-lts":
+                case "latest_lts":
                   {
                     var kernel_version = await latest_lts_kernel();
                     var kernel_type = get_type(kernel_version);
@@ -192,7 +192,7 @@ void main(arguments) async {
           {
             var kernel = arguments[1];
             switch (kernel) {
-              case "-latest-mainline":
+              case "latest_mainline":
                 {
                   var kernel_version = await latest_mainline_kernel();
                   var kernel_type = get_type(kernel_version);
@@ -203,7 +203,7 @@ void main(arguments) async {
                 }
                 break;
 
-              case "-latest-rc":
+              case "latest_rc":
                 {
                   var kernel_version = await latest_rc_kernel();
                   var kernel_type = get_type(kernel_version);
@@ -214,7 +214,7 @@ void main(arguments) async {
                 }
                 break;
 
-              case "-latest-lts":
+              case "latest_lts":
                 {
                   var kernel_version = await latest_lts_kernel();
                   var kernel_type = get_type(kernel_version);
@@ -244,7 +244,7 @@ void main(arguments) async {
             try {
               var update_status = await checkforupdate();
               switch (update_status) {
-                case 1:
+                case true:
                   {
                     await update();
                   }
@@ -284,7 +284,7 @@ void main(arguments) async {
         try {
           var update_status = await checkforupdate();
           switch (update_status) {
-            case 1:
+            case true:
               {
                 var update_status = prompt_update();
                 if (update_status == true) {

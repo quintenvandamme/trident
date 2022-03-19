@@ -1,2 +1,2 @@
 String trident_version = '0.0.4';
-String trident_prerelease_version = '-rc3';
+String trident_prerelease_version = '-rc4';

@@ -27,7 +27,7 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -87,7 +87,7 @@
     },
     {
       "name": "pub_semver",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/pub_semver-2.1.0",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/pub_semver-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -146,7 +146,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-03-04T10:06:50.395938Z",
+  "generated": "2022-03-12T16:09:04.728967Z",
   "generator": "pub",
   "generatorVersion": "2.16.1"
 }

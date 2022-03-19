@@ -79,51 +79,25 @@ void install_wsl_x86_64(
           '\x1B[0m' +
           '] .wslconfig');
 
-      switch (check1_status) {
-        case "OK":
-          {
-            switch (check2_status) {
-              case "OK":
-                {
-                  switch (check3_status) {
-                    case "OK":
-                      {
-                        print('');
-
-                        final dialog = CLI_Dialog(booleanQuestions: [
-                          [
-                            'Done building linux $kernel_version. Want to reboot WSL?',
-                            'do_reboot'
-                          ]
-                        ]);
-                        final answer = dialog.ask()['do_reboot'];
-                        switch (answer) {
-                          case true:
-                            {
-                              await shell.run('''wsl.exe --shutdown''');
-                            }
-                            break;
-                        }
-                      }
-                      break;
-                    default:
-                      {
-                        print(error_7);
-                      }
-                  }
-                }
-                break;
-              default:
-                {
-                  print(error_7);
-                }
+      if (check1_status == 'OK' &&
+          check2_status == 'OK' &&
+          check3_status == 'OK') {
+        final dialog = CLI_Dialog(booleanQuestions: [
+          [
+            'Done building linux $kernel_version. Want to reboot WSL?',
+            'do_reboot'
+          ]
+        ]);
+        final answer = dialog.ask()['do_reboot'];
+        switch (answer) {
+          case true:
+            {
+              await shell.run('''wsl.exe --shutdown''');
             }
-          }
-          break;
-        default:
-          {
-            print(error_7);
-          }
+            break;
+        }
+      } else {
+        print(error_7);
       }
     }
 

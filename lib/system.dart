@@ -1,32 +1,34 @@
 import 'dart:io';
 import 'package:system_info2/system_info2.dart';
 import 'package:process_run/shell.dart';
+import 'package:Trident/device.dart';
 
 var shell = Shell();
 
 get_username() async {
-  Directory.current = '/mnt/c/Users/';
-  var name1 = await Process.run(
-    'ls',
-    ['-1t'],
+  var get_username = await Process.run(
+    'wslvar',
+    ['USERNAME'],
   );
-  var name2 = name1.stdout;
-  var name3 = name2.split('\n');
-  var username = name3[0].trim();
-  return username;
+  var username = get_username.stdout;
+  return username.replaceAll("\n", "");
 }
 
 get_threads() {
   var processors = SysInfo.cores;
   var threads = processors.length;
-  threads = threads - 2;
+  if (is_rpi == true) {
+    threads = threads - 1;
+  } else {
+    threads = threads - 2;
+  }
   return threads;
 }
 
 get_gpuinfo() async {
   var info = await Process.run(
-    'lshw',
-    ['-C', 'display'],
+    'lspci',
+    [''],
   );
   var gpuinfo = info.stdout;
 

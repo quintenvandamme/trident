@@ -9,7 +9,7 @@ The magic kernel manager for ubuntu based distros and WSL2.
 
 ## install
 
-```sudo mkdir /var/cache/trident/ && sudo chmod 777 /var/cache/trident/ && sudo wget https://github.com/quintenvandamme/trident/releases/download/0.0.4-rc3/trident -P /usr/bin/ && sudo chmod +x /usr/bin/trident```
+```sudo mkdir /var/cache/trident/ && sudo chmod 777 /var/cache/trident/ && sudo wget https://github.com/quintenvandamme/trident/releases/download/0.0.4-rc4/trident -P /usr/bin/ && sudo chmod +x /usr/bin/trident```
 
 ## usage
 
@@ -25,6 +25,15 @@ The magic kernel manager for ubuntu based distros and WSL2.
 
 You can replace **[kernel]** with:
 - a specific kernel version like 5.16.2 or 5.17-rc5
-- -latest-rc
-- -latest-mainline
-- -latest-lts
+- latest_rc
+- latest_mainline
+- latest_lts
+
+#TODO
+
+- [x] Add Generic Linux support (X86_64 and arm64)
+- [x] Add WSL2 support (X86_64 and arm64)
+- [ ] Add RaspberryPi support (arm and arm64)
+- [ ] Add WSA support (X86_64 and arm64)
+- [ ] Add SteamDeck support (Linux 5.18?)
+- [ ] Add m1 support => Add support for arch linux.

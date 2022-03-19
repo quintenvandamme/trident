@@ -36,29 +36,29 @@ checkforupdate() async {
               switch (checkrcversion) {
                 case 1:
                   {
-                    return 0;
+                    return false;
                   }
 
                 case 0:
                   {
-                    return 0;
+                    return false;
                   }
 
                 default:
                   {
-                    return 1;
+                    return true;
                   }
               }
             }
 
           case 1:
             {
-              return 0;
+              return false;
             }
 
           default:
             {
-              return 1;
+              return true;
             }
         }
       }
@@ -76,23 +76,23 @@ checkforupdate() async {
               switch (latestrelease.contains('rc')) {
                 case true:
                   {
-                    return 0;
+                    return false;
                   }
 
                 default:
                   {
-                    return 1;
+                    return true;
                   }
               }
             }
           case 1:
             {
-              return 0;
+              return false;
             }
 
           default:
             {
-              return 1;
+              return true;
             }
         }
       }

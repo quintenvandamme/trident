@@ -4,13 +4,9 @@ import 'package:Trident/globals/path.dart';
 
 void catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND) {
   if (kernel_type == 'RC') {
-    get_file(kernel_version).whenComplete(() {
-      rc(kernel_version, kernel_type, VER_STR, VER_STAND);
-    });
+    rc(kernel_version, kernel_type, VER_STR, VER_STAND);
   } else {
-    get_file(kernel_version).whenComplete(() {
-      mainline(kernel_version, kernel_type, VER_STR, VER_STAND);
-    });
+    mainline(kernel_version, kernel_type, VER_STR, VER_STAND);
   }
 }
 
