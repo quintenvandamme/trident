@@ -1,9 +1,9 @@
 import 'package:Trident/version.dart';
 import 'package:Trident/latest.dart';
 import 'package:Trident/catalog.dart';
-import 'package:Trident/file_handeler.dart';
-import 'package:Trident/system.dart';
-import 'package:Trident/update.dart';
+import 'package:Trident/sys/file_handeler.dart';
+import 'package:Trident/sys/system.dart';
+import 'package:Trident/update.dart' hide trident_version;
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/globals/path.dart';
 import 'package:Trident/globals/package_info.dart';
@@ -309,7 +309,8 @@ void main(arguments) async {
 
 void version() {
   print('\x1B[94m' + '  _   _   _');
-  print(' / \\ / \\ / \\      Version:     $trident_version');
+  print(
+      ' / \\ / \\ / \\      Version:     $trident_version$trident_prerelease_version');
   print(
       ' | | | | | |      System:      ${SysInfo.kernelName} ${SysInfo.operatingSystemName} ${SysInfo.operatingSystemVersion}');
   print(' | | | | | |      Arch:        ${SysInfo.kernelArchitecture}');
