@@ -1,6 +1,6 @@
 import 'package:cli_dialog/cli_dialog.dart';
 import 'package:Trident/web.dart';
-import 'package:Trident/file_handeler.dart';
+import 'package:Trident/sys/file_handeler.dart';
 import 'package:Trident/globals/path.dart';
 import 'package:Trident/globals/package_info.dart';
 import 'package:process_run/shell.dart';
@@ -8,12 +8,12 @@ import 'package:process_run/shell.dart';
 checkforupdate() async {
   String latestrelease = await get_latestrelease(repo);
   String trident_version_stand = trident_version;
-  trident_version = '$trident_version$trident_prerelease_version';
-  switch (trident_version.contains('rc')) {
+  String trident_version_all = '$trident_version$trident_prerelease_version';
+  switch (trident_version_all.contains('rc')) {
     case true:
       {
         trident_version_stand =
-            trident_version.substring(0, trident_version.length - 4);
+            trident_version_all.substring(0, trident_version_all.length - 4);
         String trident_version_stand_convert =
             trident_version_stand.replaceAll(".", '');
         String latestrelease_convert = latestrelease.replaceAll(".", '');
@@ -24,13 +24,14 @@ checkforupdate() async {
         switch (checkversion) {
           case 0:
             {
-              var checkrcnumber_trident_version1 = trident_version.split('-rc');
-              var checkrcnumber_trident_version =
-                  checkrcnumber_trident_version1[1].trim();
+              var checkrcnumber_trident_version_all1 =
+                  trident_version_all.split('-rc');
+              var checkrcnumber_trident_version_all =
+                  checkrcnumber_trident_version_all1[1].trim();
               var checkrcnumber_latestrelease1 = latestrelease.split('-rc');
               var checkrcnumber_latestrelease =
                   checkrcnumber_latestrelease1[1].trim();
-              var checkrcversion = checkrcnumber_trident_version
+              var checkrcversion = checkrcnumber_trident_version_all
                   .compareTo(checkrcnumber_latestrelease);
 
               switch (checkrcversion) {
@@ -67,9 +68,10 @@ checkforupdate() async {
         String latestrelease_convert1 = latestrelease.replaceAll(".", '');
         var latestrelease_convert2 = latestrelease_convert1.split('-rc');
         var latestrelease_convert = latestrelease_convert2[0].trim();
-        String trident_version_convert = trident_version.replaceAll(".", '');
+        String trident_version_all_convert =
+            trident_version_all.replaceAll(".", '');
         var checkversion =
-            trident_version_convert.compareTo(latestrelease_convert);
+            trident_version_all_convert.compareTo(latestrelease_convert);
         switch (checkversion) {
           case 0:
             {
@@ -111,14 +113,14 @@ prompt_update() {
 }
 
 update() async {
-  trident_version = '$trident_version$trident_prerelease_version';
-  var shell = Shell();
   String latestrelease = await get_latestrelease(repo);
+  String trident_version_all = '$trident_version$trident_prerelease_version';
+  var shell = Shell();
   await download_file(
       'https://github.com/quintenvandamme/trident/releases/download/$latestrelease/trident',
       'trident');
   await remove_file_root('/usr/bin/trident');
   await shell.run('''sudo cp $path_download/trident /usr/bin/''');
   await shell.run('''sudo chmod +x /usr/bin/trident''');
-  print('Updated trident from $trident_version to $latestrelease');
+  print('Updated trident from $trident_version_all to $latestrelease');
 }

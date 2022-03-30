@@ -105,9 +105,9 @@
     },
     {
       "name": "synchronized",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/synchronized-3.0.0",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/synchronized-3.0.0+2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "system_info2",
@@ -129,7 +129,7 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/win32-2.4.1",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/win32-2.5.0",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -146,7 +146,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-03-12T16:09:04.728967Z",
+  "generated": "2022-03-30T16:00:08.218991Z",
   "generator": "pub",
-  "generatorVersion": "2.16.1"
+  "generatorVersion": "2.16.2"
 }

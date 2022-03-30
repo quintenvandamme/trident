@@ -1,5 +1,5 @@
 name: Trident
-version: 0.0.4-rc4
+version: 0.0.4-rc5
 description: >-
   The magic kernel manager.
 environment:

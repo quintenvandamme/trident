@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:Trident/web.dart';
-import 'package:Trident/system.dart';
+import 'package:Trident/sys/system.dart';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/globals/path.dart';
 import 'package:process_run/shell.dart';

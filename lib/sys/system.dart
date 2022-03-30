@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:system_info2/system_info2.dart';
 import 'package:process_run/shell.dart';
-import 'package:Trident/device.dart';
+import 'package:Trident/sys/device.dart';
 
 var shell = Shell();
 
