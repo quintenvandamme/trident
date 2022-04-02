@@ -8,8 +8,7 @@ kernelbody() async {
 
 latest_rc_kernel() async {
   var kernel_body = await kernelbody();
-  var latest_rc1 = kernel_body.split(
-      '''<table id="releases">
+  var latest_rc1 = kernel_body.split('''<table id="releases">
                 <tr align="left">
             <td>mainline:</td>
             <td><strong>''');
@@ -26,8 +25,7 @@ latest_rc_kernel() async {
 
 latest_mainline_kernel() async {
   var kernel_body = await kernelbody();
-  var latest_mainline1 = kernel_body.split(
-      '''<tr align="left">
+  var latest_mainline1 = kernel_body.split('''<tr align="left">
             <td>stable:</td>
             <td><strong>''');
   var latest_mainline2 = latest_mainline1[1].trim();
@@ -38,8 +36,7 @@ latest_mainline_kernel() async {
 
 latest_lts_kernel() async {
   var kernel_body = await kernelbody();
-  var latest_lts1 = kernel_body.split(
-      '''<tr align="left">
+  var latest_lts1 = kernel_body.split('''<tr align="left">
             <td>longterm:</td>
             <td><strong>''');
   var latest_lts2 = latest_lts1[1].trim();

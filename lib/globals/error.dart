@@ -13,3 +13,9 @@ String error_9 =
     '[error_9] Failed to fetch latest release: can\'t check for updates.';
 String error_10 = '[error_10] OS not supported.';
 String error_11 = '[error_11] Failed to download and install kernel.';
+String error_12 =
+    '[error_12] The kernel you want to install is lower than what you currently have.';
+String error_13 =
+    '[error_13] You need a minimum of 2 threads to successfully compile linux with Trident.';
+String error_14 =
+    '[error_14] The wsl kernel conf file is higher than the kernel you want to install.';

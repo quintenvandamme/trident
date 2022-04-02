@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:Trident/web.dart';
+import 'package:Trident/web/main.dart';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/globals/path.dart';
 import 'package:process_run/shell.dart';

@@ -5,7 +5,13 @@ import 'package:Trident/globals/path.dart';
 import 'package:Trident/version.dart';
 import 'package:http/http.dart';
 
-get_contents(kernel_version) async {
+get_contents(url) async {
+  var address = Uri.parse(url);
+  var response = await get(address);
+  return response.body.toString();
+}
+
+get_contents_kernelubuntu(kernel_version) async {
   var url = Uri.parse(
       'https://kernel.ubuntu.com/~kernel-ppa/mainline/v$kernel_version/');
   var response = await get(url);
@@ -13,7 +19,7 @@ get_contents(kernel_version) async {
 }
 
 get_link(link_content, kernel_version) async {
-  String contents = await get_contents(kernel_version);
+  String contents = await get_contents_kernelubuntu(kernel_version);
   var parts = contents.split(link_content);
   var link_after_part = parts[1].trim();
   link_after_part = link_after_part.replaceAll('">', '');
@@ -21,7 +27,7 @@ get_link(link_content, kernel_version) async {
 }
 
 get_secretstr(link_content, kernel_version) async {
-  String contents = await get_contents(kernel_version);
+  String contents = await get_contents_kernelubuntu(kernel_version);
   var parts = contents.split(link_content);
   var link_after_part = parts[1].trim();
   link_after_part = link_after_part.replaceAll('">', '');

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:Trident/web.dart';
+import 'package:Trident/web/main.dart';
 import 'package:Trident/sys/system.dart';
 import 'package:Trident/sys/file_handeler.dart';
 import 'package:Trident/globals/error.dart';

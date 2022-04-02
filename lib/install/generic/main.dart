@@ -1,4 +1,4 @@
-import 'package:Trident/web.dart';
+import 'package:Trident/web/main.dart';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/install/generic/x86_64.dart';
 import 'package:Trident/install/generic/arm64.dart';

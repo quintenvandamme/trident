@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:Trident/web.dart';
+import 'package:Trident/web/main.dart';
 import 'package:Trident/globals/path.dart';
 
 void catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND) {

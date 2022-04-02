@@ -1,5 +1,5 @@
 import 'package:cli_dialog/cli_dialog.dart';
-import 'package:Trident/web.dart';
+import 'package:Trident/web/main.dart';
 import 'package:Trident/sys/file_handeler.dart';
 import 'package:Trident/globals/path.dart';
 import 'package:Trident/globals/package_info.dart';

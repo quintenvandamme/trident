@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:Trident/globals/error.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:process_run/shell.dart';
 import 'package:Trident/sys/device.dart';
@@ -20,7 +21,14 @@ get_threads() {
   if (is_rpi == true) {
     threads = threads - 1;
   } else {
-    threads = threads - 2;
+    if (threads == 2) {
+      threads = threads - 1;
+    } else if (threads < 2) {
+      print(error_13);
+      exit(0);
+    } else {
+      threads = threads - 2;
+    }
   }
   return threads;
 }

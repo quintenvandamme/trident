@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:Trident/globals/error.dart';
-import 'package:Trident/web.dart';
+import 'package:Trident/web/main.dart';
 
 get_version() {
   stdout.write("Kernel version: ");

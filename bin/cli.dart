@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:Trident/version.dart';
-import 'package:Trident/latest.dart';
+import 'package:Trident/kernel/latest.dart';
 import 'package:Trident/catalog.dart';
 import 'package:Trident/sys/file_handeler.dart';
 import 'package:Trident/sys/system.dart';
-import 'package:Trident/update.dart' hide trident_version;
+import 'package:Trident/sys/checks.dart';
+import 'package:Trident/web/update.dart';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/globals/path.dart';
 import 'package:Trident/globals/package_info.dart';
@@ -14,6 +16,10 @@ import 'package:system_info2/system_info2.dart';
 void main(arguments) async {
   void wsl() async {
     var kernel = arguments[1];
+    if (await kernel_version_is_lower(kernel) == true) {
+      print(error_12);
+      exit(0);
+    }
     switch (kernel) {
       case "latest_mainline":
         {
@@ -80,6 +86,10 @@ void main(arguments) async {
           {
             var kernel = arguments[1];
             String system_kernel = SysInfo.kernelVersion;
+            if (await kernel_version_is_lower(kernel) == true) {
+              print(error_12);
+              exit(0);
+            }
             if (system_kernel.contains('WSL2')) {
               print(
                   'Trident detected you are using WSL2 switched to -wsl instead.');
@@ -126,6 +136,10 @@ void main(arguments) async {
           {
             var kernel = arguments[1];
             String system_kernel = SysInfo.kernelVersion;
+            if (await kernel_version_is_lower(kernel) == true) {
+              print(error_12);
+              exit(0);
+            }
             if (system_kernel.contains('WSL2')) {
               print(
                   'Trident detected you are using WSL2 switched to -wsl instead.');
