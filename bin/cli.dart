@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:Trident/version.dart';
 import 'package:Trident/kernel/latest.dart';
 import 'package:Trident/catalog.dart';
-import 'package:Trident/sys/file_handeler.dart';
+import 'package:Trident/sys/file_handler.dart';
 import 'package:Trident/sys/system.dart';
 import 'package:Trident/sys/checks.dart';
+import 'package:Trident/sys/config.dart';
 import 'package:Trident/web/update.dart';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/globals/path.dart';
@@ -14,17 +15,27 @@ import 'package:Trident/install/wsl/main.dart';
 import 'package:system_info2/system_info2.dart';
 
 void main(arguments) async {
-  void wsl() async {
-    var kernel = arguments[1];
-    if (await kernel_version_is_lower(kernel) == true) {
+  // configs
+  var checkforupdates = true;
+  try {
+    checkforupdates = await get_config('checkforupdates');
+  } catch (error) {}
+
+  void check_if_kernel_is_lower(kernel_version) async {
+    if (await kernel_version_is_lower(kernel_version) == true) {
       print(error_12);
       exit(0);
     }
+  }
+
+  void wsl() async {
+    var kernel = arguments[1];
     switch (kernel) {
       case "latest_mainline":
         {
           var kernel_version = await latest_mainline_kernel();
           var kernel_type = get_type(kernel_version);
+          check_if_kernel_is_lower(kernel_version);
           install_wsl(kernel_version, kernel_type);
         }
         break;
@@ -33,6 +44,7 @@ void main(arguments) async {
         {
           var kernel_version = await latest_rc_kernel();
           var kernel_type = get_type(kernel_version);
+          check_if_kernel_is_lower(kernel_version);
           install_wsl(kernel_version, kernel_type);
         }
         break;
@@ -41,6 +53,7 @@ void main(arguments) async {
         {
           var kernel_version = await latest_lts_kernel();
           var kernel_type = get_type(kernel_version);
+          check_if_kernel_is_lower(kernel_version);
           install_wsl(kernel_version, kernel_type);
         }
         break;
@@ -49,6 +62,7 @@ void main(arguments) async {
         {
           var kernel_version = arguments[1];
           var kernel_type = get_type(kernel_version);
+          check_if_kernel_is_lower(kernel_version);
           install_wsl(kernel_version, kernel_type);
         }
         break;
@@ -86,10 +100,6 @@ void main(arguments) async {
           {
             var kernel = arguments[1];
             String system_kernel = SysInfo.kernelVersion;
-            if (await kernel_version_is_lower(kernel) == true) {
-              print(error_12);
-              exit(0);
-            }
             if (system_kernel.contains('WSL2')) {
               print(
                   'Trident detected you are using WSL2 switched to -wsl instead.');
@@ -100,6 +110,7 @@ void main(arguments) async {
                   {
                     var kernel_version = await latest_mainline_kernel();
                     var kernel_type = get_type(kernel_version);
+                    check_if_kernel_is_lower(kernel_version);
                     compile_main(kernel_version, kernel_type);
                   }
                   break;
@@ -108,6 +119,7 @@ void main(arguments) async {
                   {
                     var kernel_version = await latest_rc_kernel();
                     var kernel_type = get_type(kernel_version);
+                    check_if_kernel_is_lower(kernel_version);
                     compile_main(kernel_version, kernel_type);
                   }
                   break;
@@ -116,6 +128,7 @@ void main(arguments) async {
                   {
                     var kernel_version = await latest_lts_kernel();
                     var kernel_type = get_type(kernel_version);
+                    check_if_kernel_is_lower(kernel_version);
                     compile_main(kernel_version, kernel_type);
                   }
                   break;
@@ -124,6 +137,7 @@ void main(arguments) async {
                   {
                     var kernel_version = arguments[1];
                     var kernel_type = get_type(kernel_version);
+                    check_if_kernel_is_lower(kernel_version);
                     compile_main(kernel_version, kernel_type);
                   }
                   break;
@@ -136,10 +150,6 @@ void main(arguments) async {
           {
             var kernel = arguments[1];
             String system_kernel = SysInfo.kernelVersion;
-            if (await kernel_version_is_lower(kernel) == true) {
-              print(error_12);
-              exit(0);
-            }
             if (system_kernel.contains('WSL2')) {
               print(
                   'Trident detected you are using WSL2 switched to -wsl instead.');
@@ -154,6 +164,7 @@ void main(arguments) async {
                         get_versionstring(kernel_version, kernel_type);
                     var VER_STAND =
                         get_versionstandalone(kernel_version, kernel_type);
+                    check_if_kernel_is_lower(kernel_version);
                     install_main(
                         kernel_version, kernel_type, VER_STR, VER_STAND);
                   }
@@ -167,6 +178,7 @@ void main(arguments) async {
                         get_versionstring(kernel_version, kernel_type);
                     var VER_STAND =
                         get_versionstandalone(kernel_version, kernel_type);
+                    check_if_kernel_is_lower(kernel_version);
                     install_main(
                         kernel_version, kernel_type, VER_STR, VER_STAND);
                   }
@@ -180,6 +192,7 @@ void main(arguments) async {
                         get_versionstring(kernel_version, kernel_type);
                     var VER_STAND =
                         get_versionstandalone(kernel_version, kernel_type);
+                    check_if_kernel_is_lower(kernel_version);
                     install_main(
                         kernel_version, kernel_type, VER_STR, VER_STAND);
                   }
@@ -193,6 +206,7 @@ void main(arguments) async {
                         get_versionstring(kernel_version, kernel_type);
                     var VER_STAND =
                         get_versionstandalone(kernel_version, kernel_type);
+                    check_if_kernel_is_lower(kernel_version);
                     install_main(
                         kernel_version, kernel_type, VER_STR, VER_STAND);
                   }
@@ -297,21 +311,25 @@ void main(arguments) async {
       {
         try {
           var update_status = await checkforupdate();
-          switch (update_status) {
-            case true:
-              {
-                var update_status = prompt_update();
-                if (update_status == true) {
-                  await update();
+          if (checkforupdates == true) {
+            switch (update_status) {
+              case true:
+                {
+                  var update_status = prompt_update();
+                  if (update_status == true) {
+                    await update();
+                    commands();
+                  }
+                }
+                break;
+              default:
+                {
                   commands();
                 }
-              }
-              break;
-            default:
-              {
-                commands();
-              }
-              break;
+                break;
+            }
+          } else {
+            commands();
           }
         } catch (error) {
           print(error_9);

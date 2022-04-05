@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:Trident/web/main.dart';
 import 'package:Trident/sys/system.dart';
-import 'package:Trident/sys/file_handeler.dart';
+import 'package:Trident/sys/file_handler.dart';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/globals/path.dart';
 import 'package:cli_dialog/cli_dialog.dart';
@@ -12,6 +12,7 @@ var shell = Shell();
 
 void install_wsl_arm64(
     kernel_version, kernel_type, download_link, file_extension) async {
+  var latest_wsl_branch = await get_latest_wsl_branch();
   String? system_kernel = SysInfo.kernelVersion;
   if (system_kernel.contains('-WSL2')) {
     system_kernel = system_kernel.replaceAll('-microsoft-standard-WSL2', '');
@@ -28,7 +29,7 @@ void install_wsl_arm64(
       await shell.run(
           '''tar -xf $path_download/wsl2/kernel$file_extension -C $path_download/wsl2/''');
       await download_file(
-          'https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.10.y/Microsoft/config-wsl-arm64',
+          'https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-$latest_wsl_branch.y/Microsoft/config-wsl-arm64',
           '/wsl2/config-wsl');
       Directory.current = '$path_download/wsl2/';
       await shell.run(

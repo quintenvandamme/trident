@@ -82,6 +82,16 @@ Future<void> valid(url, kernel_version) async {
   }
 }
 
+get_latest_wsl_branch() async {
+  var address = Uri.parse('https://github.com/microsoft/WSL2-Linux-Kernel');
+  var response = await get(address);
+  var body = response.body.toString();
+  var result = body.split('title="linux-msft-wsl-');
+  var result2 = result[1].toString();
+  var result3 = result2.split('.y">');
+  return result3[0];
+}
+
 download_file(url, name) async {
   Response response = await get(Uri.parse(url));
   File file = File('$path_download/$name');

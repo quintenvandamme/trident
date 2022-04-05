@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:process_run/shell.dart';
 import 'package:Trident/globals/path.dart';
-import 'package:Trident/sys/file_handeler.dart';
+import 'package:Trident/sys/file_handler.dart';
 import 'package:Trident/web/main.dart';
 
 // source https://www.raspberrypi-spy.co.uk/2012/09/checking-your-raspberry-pi-board-version/ and https://elinux.org/RPi_HardwareHistory

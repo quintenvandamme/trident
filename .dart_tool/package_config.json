@@ -9,9 +9,9 @@
     },
     {
       "name": "async",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/async-2.8.2",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/async-2.9.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "charcode",
@@ -26,8 +26,20 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "clock",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "collection",
       "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "cron",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/cron-0.4.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -129,7 +141,7 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/win32-2.5.0",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/win32-2.5.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -146,7 +158,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-04-02T06:20:44.742416Z",
+  "generated": "2022-04-04T08:47:18.755186Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }
