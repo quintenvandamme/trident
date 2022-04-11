@@ -76,3 +76,7 @@ Future file_status(file) async {
   }
   return [status, color];
 }
+
+Future file_exists(file) async {
+  return await File(file).exists();
+}

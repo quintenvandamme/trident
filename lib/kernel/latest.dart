@@ -1,4 +1,5 @@
 import 'package:http/http.dart';
+import 'package:Trident/gui/list.dart';
 
 kernelbody() async {
   var url = Uri.parse('https://kernel.org/');
@@ -23,6 +24,12 @@ latest_rc_kernel() async {
   return latest_rc;
 }
 
+latest_rc_kernel_kernelubuntucom() async {
+  List rc_ubuntu_list = await get_list_kernelubuntucom();
+  return rc_ubuntu_list[
+      rc_ubuntu_list.indexWhere((item) => item.contains('-rc'))];
+}
+
 latest_mainline_kernel() async {
   var kernel_body = await kernelbody();
   var latest_mainline1 = kernel_body.split('''<tr align="left">
@@ -34,6 +41,13 @@ latest_mainline_kernel() async {
   return latest_mainline;
 }
 
+latest_mainline_kernel_kernelubuntucom() async {
+  List mainline_ubuntu_list = await get_list_kernelubuntucom();
+  mainline_ubuntu_list.removeWhere((item) => item.contains('-rc'));
+  mainline_ubuntu_list.removeWhere((item) => item.contains('5.15.'));
+  return mainline_ubuntu_list[0];
+}
+
 latest_lts_kernel() async {
   var kernel_body = await kernelbody();
   var latest_lts1 = kernel_body.split('''<tr align="left">
@@ -43,4 +57,10 @@ latest_lts_kernel() async {
   var latest_lts3 = latest_lts2.split('</strong></td>');
   var latest_lts = latest_lts3[0].trim();
   return latest_lts;
+}
+
+latest_lts_kernel_kernelubuntucom() async {
+  List lts_ubuntu_list = await get_list_kernelubuntucom();
+  return lts_ubuntu_list[
+      lts_ubuntu_list.indexWhere((item) => item.startsWith('5.15.'))];
 }

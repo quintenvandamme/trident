@@ -9,7 +9,7 @@ The magic kernel manager for ubuntu based distros and WSL2.
 
 ## install
 
-```sudo mkdir /var/cache/trident/ && sudo chmod 777 /var/cache/trident/ && sudo wget https://github.com/quintenvandamme/trident/releases/download/0.0.4-rc7/trident -P /usr/bin/ && sudo chmod +x /usr/bin/trident```
+```sudo mkdir /var/cache/trident/ && sudo chmod 777 /var/cache/trident/ && sudo wget https://github.com/quintenvandamme/trident/releases/download/0.0.4-rc8/trident -P /usr/bin/ && sudo chmod +x /usr/bin/trident```
 
 ## usage
 

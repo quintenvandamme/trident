@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:system_info2/system_info2.dart';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/sys/device.dart';
+import 'package:Trident/sys/file_handler.dart';
 import 'package:Trident/kernel/main.dart';
 
 // check if the kernel you want to install is lower than what you currently have.
@@ -10,23 +11,35 @@ kernel_version_is_lower(kernel_version) async {
     var system_kernel =
         SysInfo.kernelVersion.replaceAll('-microsoft-standard-WSL2', '');
     system_kernel = SysInfo.kernelVersion.replaceAll('-trident-WSL2', '');
-    var system_kernel_int = convert_kernel_toint(system_kernel);
-    var wslgithub_kernel_int =
-        convert_kernel_toint(await get_wsl_kernel_config_info());
-    var kernel_version_int = convert_kernel_toint(kernel_version);
     if (system_kernel == kernel_version) {
       return false;
-    } else if (system_kernel_int > kernel_version_int) {
+    } else if (convert_kernel_toint(system_kernel) >
+        convert_kernel_toint(kernel_version)) {
       return true;
-    } else if (wslgithub_kernel_int > kernel_version_int) {
+    } else if (convert_kernel_toint(await get_wsl_kernel_config_info()) >
+        convert_kernel_toint(kernel_version)) {
       print(error_14);
       exit(0);
     }
   } else {
+    // fix where generic ubuntu kernels (eg 5.13.0-39-generic) fails the checks.
     var system_kernel_int = convert_kernel_toint(SysInfo.kernelVersion);
+    if (SysInfo.kernelVersion.contains('-rc')) {
+      var system_kernel_part = SysInfo.kernelVersion.split('-rc');
+      var system_kernel_part2 = system_kernel_part[0];
+      var system_kernel_length = system_kernel_part2.length + 4;
+      var system_kernel =
+          SysInfo.kernelVersion.substring(0, system_kernel_length);
+      system_kernel_int = convert_kernel_toint(system_kernel);
+    } else if (SysInfo.kernelVersion.contains('generic')) {
+      var system_kernel_part = SysInfo.kernelVersion.split('-');
+      system_kernel_int = convert_kernel_toint(system_kernel_part[0]);
+    }
     var kernel_version_int = convert_kernel_toint(kernel_version);
     if (system_kernel_int > kernel_version_int) {
       return true;
+    } else {
+      return false;
     }
   }
 }
@@ -46,5 +59,12 @@ kernel_version_is_same(kernel_version) {
     if (SysInfo.kernelVersion == kernel_version) {
       return true;
     }
+  }
+}
+
+system_uses_apt() {
+  if (file_exists('/var/cache/apt/pkgcache.bin') == false) {
+    print(error_15);
+    exit(0);
   }
 }

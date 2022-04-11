@@ -6,7 +6,7 @@ get_contents(url) async {
   return response.body.toString();
 }
 
-void get_list_kernelorg_rc() async {
+get_list_kernelorg_rc() async {
   var contents = await get_contents(
       'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/refs/');
   List result = contents.split('<a');
@@ -36,10 +36,10 @@ void get_list_kernelorg_rc() async {
   List result2 = converted_result.toList();
   result2.removeWhere((item) => item.contains('href'));
   result2.removeWhere((item) => item.contains('class'));
-  print(result2);
+  return result2;
 }
 
-void get_list_kernelorg_main() async {
+get_list_kernelorg_main() async {
   var contents =
       await get_contents('https://cdn.kernel.org/pub/linux/kernel/v5.x/');
   List result = contents.split('<a');
@@ -63,11 +63,10 @@ void get_list_kernelorg_main() async {
   var converted_result = await convert_result();
   List result2 = converted_result.toList();
   result2.removeWhere((item) => item.contains('/'));
-  var result3 = result2.toSet().toList();
-  print(result3);
+  return result2.toSet().toList();
 }
 
-void get_list_kernelubuntucom() async {
+Future<List> get_list_kernelubuntucom() async {
   var contents =
       await get_contents('https://kernel.ubuntu.com/~kernel-ppa/mainline/');
   List result = contents.split('<a');
@@ -107,11 +106,41 @@ void get_list_kernelubuntucom() async {
   result2.removeWhere((item) => item.contains('B'));
   result2.removeWhere((item) => item.contains('C'));
   result2.removeWhere((item) => item.contains('X'));
-  var result3 = new List.from(result2.reversed);
+  return List.from(result2.reversed);
+}
 
-  print(result3);
+void get_list_lts_kernels() async {
+  var contents =
+      await get_contents('https://kernel.org/category/releases.html');
+  List result = contents.split('<tr><td>');
+  result.removeWhere((item) => item.contains('head'));
+  result.removeWhere((item) => item.contains('title'));
+  result.removeWhere((item) => item.contains('<dt>'));
+  result.removeWhere((item) => item.contains('<dd>'));
+  result.removeWhere((item) => item.contains('body'));
+  result.removeWhere((item) => item.contains('div'));
+
+  var result2 = result.toString();
+  List result3 = result2.split('</td>');
+  result3.removeWhere((item) => item.contains('<td>'));
+  //result3.removeWhere((item) => item.contains('</tr>'));
+  convert_result() sync* {
+    for (var prop in result3) {
+      var currentElement = prop;
+      var testo1 = currentElement.replaceAll("</tr>", "");
+      var testo2 = testo1.replaceAll("\n", "");
+      yield testo2;
+    }
+  }
+
+  var converted_result = await convert_result();
+  var result4 = converted_result.toString();
+  var result5 = result4.replaceAll("[[", "[");
+  var result6 = result5.replaceAll("]]", "]");
+  var result7 = result6.replaceAll(", ,", ",");
+  print(result7);
 }
 
 void main() async {
-  get_list_kernelubuntucom();
+  get_list_lts_kernels();
 }

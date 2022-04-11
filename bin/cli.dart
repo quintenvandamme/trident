@@ -300,6 +300,7 @@ void main(arguments) async {
     }
   }
 
+  system_uses_apt();
   var gpuinfo = await get_gpuinfo();
   switch (gpuinfo) {
     case true:

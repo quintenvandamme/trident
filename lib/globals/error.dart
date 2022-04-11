@@ -19,3 +19,4 @@ String error_13 =
     '[error_13] You need a minimum of 2 threads to successfully compile linux with Trident.';
 String error_14 =
     '[error_14] The wsl kernel conf file is higher than the kernel you want to install.';
+String error_15 = '[error_15] Your system does not use apt.';
