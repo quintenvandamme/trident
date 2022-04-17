@@ -50,6 +50,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "decimal",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/decimal-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "ffi",
       "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/ffi-1.1.2",
       "packageUri": "lib/",
@@ -104,8 +110,14 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "rational",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/rational-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "source_span",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.2",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/source_span-1.9.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -158,7 +170,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-04-11T09:54:02.724408Z",
+  "generated": "2022-04-17T20:16:00.679862Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }

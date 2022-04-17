@@ -1,7 +1,6 @@
 import 'dart:io';
-import 'package:Trident/version.dart';
+import 'package:Trident/kernel/version.dart';
 import 'package:Trident/kernel/latest.dart';
-import 'package:Trident/catalog.dart';
 import 'package:Trident/sys/file_handler.dart';
 import 'package:Trident/sys/system.dart';
 import 'package:Trident/sys/checks.dart';
@@ -16,10 +15,9 @@ import 'package:system_info2/system_info2.dart';
 
 void main(arguments) async {
   // configs
-  var checkforupdates = true;
-  try {
-    checkforupdates = await get_config('checkforupdates');
-  } catch (error) {}
+  var get_config = new config();
+
+  var checkforupdates = get_config.checkforupdates();
 
   void check_if_kernel_is_lower(kernel_version) async {
     if (await kernel_version_is_lower(kernel_version) == true) {
@@ -91,8 +89,13 @@ void main(arguments) async {
 
         case "-help":
           {
-            print(
-                '--version              display version.\n-help                  list all commands.\n-update                check for and install updates.\n-install <kernel>      install specific kernel from binary.\n-compile <kernel>      build and install specific kernel.\n-wsl <kernel>          build and install specific kernel for wsl2.\n-catalog <kernel>      catalog specific kernel.');
+            print('''
+--version              display version.
+-help                  list all commands.
+-update                check for and install updates.
+-install <kernel>      install specific kernel from binary.
+-compile <kernel>      build and install specific kernel.
+-wsl <kernel>          build and install specific kernel for wsl2.''');
           }
           break;
 
@@ -158,7 +161,8 @@ void main(arguments) async {
               switch (kernel) {
                 case "latest_mainline":
                   {
-                    var kernel_version = await latest_mainline_kernel();
+                    var kernel_version =
+                        await latest_mainline_kernel_kernelubuntucom();
                     var kernel_type = get_type(kernel_version);
                     var VER_STR =
                         get_versionstring(kernel_version, kernel_type);
@@ -172,7 +176,8 @@ void main(arguments) async {
 
                 case "latest_rc":
                   {
-                    var kernel_version = await latest_rc_kernel();
+                    var kernel_version =
+                        await latest_rc_kernel_kernelubuntucom();
                     var kernel_type = get_type(kernel_version);
                     var VER_STR =
                         get_versionstring(kernel_version, kernel_type);
@@ -186,7 +191,8 @@ void main(arguments) async {
 
                 case "latest_lts":
                   {
-                    var kernel_version = await latest_lts_kernel();
+                    var kernel_version =
+                        await latest_lts_kernel_kernelubuntucom();
                     var kernel_type = get_type(kernel_version);
                     var VER_STR =
                         get_versionstring(kernel_version, kernel_type);
@@ -212,57 +218,6 @@ void main(arguments) async {
                   }
                   break;
               }
-            }
-          }
-          break;
-
-        case "-catalog":
-          {
-            var kernel = arguments[1];
-            switch (kernel) {
-              case "latest_mainline":
-                {
-                  var kernel_version = await latest_mainline_kernel();
-                  var kernel_type = get_type(kernel_version);
-                  var VER_STR = get_versionstring(kernel_version, kernel_type);
-                  var VER_STAND =
-                      get_versionstandalone(kernel_version, kernel_type);
-                  catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
-                }
-                break;
-
-              case "latest_rc":
-                {
-                  var kernel_version = await latest_rc_kernel();
-                  var kernel_type = get_type(kernel_version);
-                  var VER_STR = get_versionstring(kernel_version, kernel_type);
-                  var VER_STAND =
-                      get_versionstandalone(kernel_version, kernel_type);
-                  catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
-                }
-                break;
-
-              case "latest_lts":
-                {
-                  var kernel_version = await latest_lts_kernel();
-                  var kernel_type = get_type(kernel_version);
-                  var VER_STR = get_versionstring(kernel_version, kernel_type);
-                  var VER_STAND =
-                      get_versionstandalone(kernel_version, kernel_type);
-                  catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
-                }
-                break;
-
-              default:
-                {
-                  var kernel_version = arguments[1];
-                  var kernel_type = get_type(kernel_version);
-                  var VER_STR = get_versionstring(kernel_version, kernel_type);
-                  var VER_STAND =
-                      get_versionstandalone(kernel_version, kernel_type);
-                  catalog_main(kernel_version, kernel_type, VER_STR, VER_STAND);
-                }
-                break;
             }
           }
           break;
@@ -342,14 +297,19 @@ void main(arguments) async {
 
 void version() {
   print('\x1B[94m' + '  _   _   _');
+  print(' / \\ / \\ / \\      ' +
+      '\x1B[0m' +
+      '\x1b[37m' +
+      '${SysInfo.userName}@${Platform.localHostname}' +
+      '\x1B[0m' +
+      '\x1B[94m');
+  print(' | | | | | |');
   print(
-      ' / \\ / \\ / \\      Version:     $trident_version$trident_prerelease_version');
+      ' | | | | | |      Version:     $trident_version$trident_prerelease_version');
   print(
-      ' | | | | | |      System:      ${SysInfo.kernelName} ${SysInfo.operatingSystemName} ${SysInfo.operatingSystemVersion}');
-  print(' | | | | | |      Arch:        ${SysInfo.kernelArchitecture}');
-  print(' \\ |_| |_| /      Kernel:      ${SysInfo.kernelVersion}');
-  print('  \\__   __/');
-  print('     | |');
+      ' \\ |_| |_| /      System:      ${SysInfo.kernelName} ${SysInfo.operatingSystemName} ${SysInfo.operatingSystemVersion}');
+  print('  \\__   __/       Arch:        ${SysInfo.kernelArchitecture}');
+  print('     | |          Kernel:      ${SysInfo.kernelVersion}');
   print('     | |');
   print('     | |');
   print('     \\_/' + '\x1B[0m');

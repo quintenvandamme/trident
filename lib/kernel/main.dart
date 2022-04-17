@@ -6,9 +6,15 @@ convert_kernel_toint(String kernel) {
     kernel = kernel.substring(0, kernel.length - 1);
   }
   var kernel1 = kernel.replaceAll('-rc', '');
-  var kernel2 = kernel1.replaceAll('.', '');
-  var kernel3 = '$kernel2' + '0';
-  return int.parse(kernel3);
+  if ('.'.allMatches(kernel1).length == 1) {
+    var kernel2 = kernel1.replaceAll('.', '');
+    var kernel3 = '$kernel2' + '00';
+    return int.parse(kernel3);
+  } else if ('.'.allMatches(kernel1).length == 2) {
+    var kernel2 = kernel1.replaceAll('.', '');
+    var kernel3 = '$kernel2' + '0';
+    return int.parse(kernel3);
+  }
 }
 
 get_wsl_kernel_config_info() async {

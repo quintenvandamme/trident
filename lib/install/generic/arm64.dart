@@ -26,7 +26,9 @@ installrc_arm64(
                 '_arm64.deb',
             '3arm.deb');
         Directory.current = '$path_download';
-        await shell.run('''sudo dpkg -i *arm.deb''');
+        await shell.run('''sudo dpkg -i 1arm.deb''');
+        await shell.run('''sudo dpkg -i 2arm.deb''');
+        await shell.run('''sudo dpkg -i 3arm.deb''');
       }
       break;
 
@@ -58,7 +60,9 @@ installmainline_arm64(
                 '_arm64.deb',
             '3arm.deb');
         Directory.current = '$path_download';
-        await shell.run('''sudo dpkg -i *arm.deb''');
+        await shell.run('''sudo dpkg -i 1arm.deb''');
+        await shell.run('''sudo dpkg -i 2arm.deb''');
+        await shell.run('''sudo dpkg -i 3arm.deb''');
       }
       break;
 

@@ -11,7 +11,7 @@ void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) async {
         switch (kernel_type) {
           case "RC":
             {
-              String? secretstr = get_secretstr(
+              String? secretstr = await get_secretstr(
                   'amd64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR',
                   kernel_version);
               await installrc_x86_64(
@@ -20,7 +20,7 @@ void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) async {
             break;
           default:
             {
-              String? secretstr = get_secretstr(
+              String? secretstr = await get_secretstr(
                   'amd64/linux-headers-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR',
                   kernel_version);
               await installmainline_x86_64(
@@ -36,7 +36,7 @@ void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) async {
         switch (kernel_type) {
           case "RC":
             {
-              String? secretstr = get_secretstr(
+              String? secretstr = await get_secretstr(
                   'amd64/linux-headers-$VER_STAND-$VER_STR-generic_$VER_STAND-$VER_STR',
                   kernel_version);
               await installrc_arm64(
@@ -45,7 +45,7 @@ void install_main(kernel_version, kernel_type, VER_STR, VER_STAND) async {
             break;
           default:
             {
-              String? secretstr = get_secretstr(
+              String? secretstr = await get_secretstr(
                   'arm64/linux-headers-$kernel_version-$VER_STR-generic_$kernel_version-$VER_STR',
                   kernel_version);
               await installmainline_arm64(

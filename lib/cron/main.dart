@@ -14,14 +14,9 @@ check_for_new_kernel() async {
         SysInfo.kernelVersion.replaceAll('-microsoft-standard-WSL2', '');
   }
   // configs
-  var cron_schedule = null;
-  var cron_checkfor = null;
-  try {
-    cron_schedule = await get_config('cron_schedule');
-  } catch (error) {}
-  try {
-    cron_checkfor = await get_config('cron_checkfor');
-  } catch (error) {}
+  var get_config = new config();
+  var cron_schedule = get_config.cron_schedule();
+  var cron_checkfor = get_config.cron_checkfor();
   switch (cron_checkfor) {
     case 'latest_rc':
       {

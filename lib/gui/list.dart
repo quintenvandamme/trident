@@ -48,6 +48,7 @@ get_list_kernelorg_main() async {
   result.removeWhere((item) => item.contains('sha'));
   result.removeWhere((item) => item.contains('html'));
   result.removeWhere((item) => item.contains('sign'));
+  result.removeWhere((item) => item.contains('rc'));
 
   convert_result() sync* {
     for (var prop in result) {
@@ -109,7 +110,7 @@ Future<List> get_list_kernelubuntucom() async {
   return List.from(result2.reversed);
 }
 
-void get_list_lts_kernels() async {
+get_list_lts_kernels(extension) async {
   var contents =
       await get_contents('https://kernel.org/category/releases.html');
   List result = contents.split('<tr><td>');
@@ -119,28 +120,76 @@ void get_list_lts_kernels() async {
   result.removeWhere((item) => item.contains('<dd>'));
   result.removeWhere((item) => item.contains('body'));
   result.removeWhere((item) => item.contains('div'));
-
-  var result2 = result.toString();
-  List result3 = result2.split('</td>');
-  result3.removeWhere((item) => item.contains('<td>'));
-  //result3.removeWhere((item) => item.contains('</tr>'));
   convert_result() sync* {
-    for (var prop in result3) {
+    for (var prop in result) {
       var currentElement = prop;
       var testo1 = currentElement.replaceAll("</tr>", "");
       var testo2 = testo1.replaceAll("\n", "");
-      yield testo2;
+      var testo3 = testo2.replaceAll(RegExp('[^0-9.,-<>]'), '');
+      var testo4 = testo3.substring(0, testo3.indexOf('<'));
+      if (extension == true) {
+        yield '$testo4.';
+      } else {
+        yield testo4;
+      }
     }
   }
 
-  var converted_result = await convert_result();
-  var result4 = converted_result.toString();
-  var result5 = result4.replaceAll("[[", "[");
-  var result6 = result5.replaceAll("]]", "]");
-  var result7 = result6.replaceAll(", ,", ",");
-  print(result7);
+  return await convert_result().toList();
+}
+
+get_full_list() async {
+  var list_kernelorg_main = await get_list_kernelorg_main();
+  var list_kernelorg_rc = await get_list_kernelorg_rc();
+  var branch_list = []..addAll(list_kernelorg_rc);
+  branch_list.removeWhere((item) => item.contains('-rc'));
+
+  get_branch_list_subversions(kernel) sync* {
+    for (var i = 0; i < list_kernelorg_main.length; i++) {
+      if (list_kernelorg_main[i].startsWith('$kernel.')) {
+        yield list_kernelorg_main[i];
+      }
+    }
+  }
+
+  for (var i = 0; i < branch_list.length; i++) {
+    var kernel = branch_list[i];
+    var subversions = get_branch_list_subversions(kernel);
+    var subversions_list_string = subversions.toList();
+    subversions_list_string.sort((a, b) {
+      var a_split = a.split('.');
+      var b_split = b.split('.');
+      var a_major = int.parse(a_split[0]);
+      var b_major = int.parse(b_split[0]);
+      var a_minor = int.parse(a_split[1]);
+      var b_minor = int.parse(b_split[1]);
+      var a_patch = int.parse(a_split[2]);
+      var b_patch = int.parse(b_split[2]);
+      if (a_major == b_major) {
+        if (a_minor == b_minor) {
+          return a_patch.compareTo(b_patch);
+        } else {
+          return a_minor.compareTo(b_minor);
+        }
+      } else {
+        return a_major.compareTo(b_major);
+      }
+    });
+    var subversions_list =
+        subversions_list_string.reversed.toList().map((e) => e.toString());
+    var theindex = list_kernelorg_rc.indexOf(kernel);
+    list_kernelorg_rc.insertAll(theindex, subversions_list);
+
+    return_the_list() sync* {
+      for (var i = 0; i < list_kernelorg_rc.length; i++) {
+        yield list_kernelorg_rc[i];
+      }
+    }
+
+    return return_the_list().toList();
+  }
 }
 
 void main() async {
-  get_list_lts_kernels();
+  print(await get_full_list());
 }

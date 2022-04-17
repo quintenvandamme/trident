@@ -6,7 +6,7 @@ import 'package:Trident/globals/path.dart';
 import 'package:process_run/shell.dart';
 import 'package:system_info2/system_info2.dart';
 
-var shell = Shell();
+var shell = new Shell(runInShell: true);
 
 installrc_x86_64(
     kernel_version, kernel_type, VER_STR, VER_STAND, secretstr) async {
@@ -34,7 +34,10 @@ installrc_x86_64(
                 '_amd64.deb',
             '4amd.deb');
         Directory.current = '$path_download';
-        await shell.run('''sudo dpkg -i *amd.deb''');
+        await shell.run('''sudo dpkg -i 1amd.deb''');
+        await shell.run('''sudo dpkg -i 2amd.deb''');
+        await shell.run('''sudo dpkg -i 3amd.deb''');
+        await shell.run('''sudo dpkg -i 4amd.deb''');
       }
       break;
 
@@ -72,7 +75,10 @@ installmainline_x86_64(
                 '_amd64.deb',
             '4amd.deb');
         Directory.current = '$path_download';
-        await shell.run('''sudo dpkg -i *amd.deb''');
+        await shell.run('''sudo dpkg -i 1amd.deb''');
+        await shell.run('''sudo dpkg -i 2amd.deb''');
+        await shell.run('''sudo dpkg -i 3amd.deb''');
+        await shell.run('''sudo dpkg -i 4amd.deb''');
       }
       break;
 
@@ -102,6 +108,8 @@ void compile_main_x86_64(kernel_version, kernel_type) async {
         '''sed -i 's+CONFIG_SYSTEM_REVOCATION_KEYS="debian/canonical-revoked-certs.pem"+CONFIG_SYSTEM_REVOCATION_KEYS=""+gI' ./.config''');
     await shell.run(
         '''sed -i 's+CONFIG_LOCALVERSION=""+CONFIG_LOCALVERSION="-trident"+gI' ./.config''');
+    await shell.run(
+        '''sed -i 's+bool+ +gI' $path_download/linux/linux-$kernel_version/init/Kconfig''');
     await shell.run('''make -j$threads''');
     await shell.run('''sudo make modules_install''');
     await shell.run('''sudo make install''');

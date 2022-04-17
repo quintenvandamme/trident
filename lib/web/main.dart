@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:core';
 import 'package:Trident/globals/error.dart';
 import 'package:Trident/globals/path.dart';
-import 'package:Trident/version.dart';
+import 'package:Trident/kernel/version.dart';
 import 'package:http/http.dart';
 
 get_contents(url) async {

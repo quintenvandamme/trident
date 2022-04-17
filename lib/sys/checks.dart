@@ -8,10 +8,15 @@ import 'package:Trident/kernel/main.dart';
 // check if the kernel you want to install is lower than what you currently have.
 kernel_version_is_lower(kernel_version) async {
   if (is_wsl() == true) {
-    var system_kernel =
-        SysInfo.kernelVersion.replaceAll('-microsoft-standard-WSL2', '');
-    system_kernel = SysInfo.kernelVersion.replaceAll('-trident-WSL2', '');
-    if (system_kernel == kernel_version) {
+    var system_kernel = null;
+    if (SysInfo.kernelVersion.contains('-microsoft-standard-WSL2')) {
+      system_kernel =
+          SysInfo.kernelVersion.replaceAll('-microsoft-standard-WSL2', '');
+    } else if (SysInfo.kernelVersion.contains('-trident-WSL2')) {
+      system_kernel = SysInfo.kernelVersion.replaceAll('-trident-WSL2', '');
+    }
+    if (convert_kernel_toint(system_kernel) ==
+        convert_kernel_toint(kernel_version)) {
       return false;
     } else if (convert_kernel_toint(system_kernel) >
         convert_kernel_toint(kernel_version)) {
@@ -23,7 +28,7 @@ kernel_version_is_lower(kernel_version) async {
     }
   } else {
     // fix where generic ubuntu kernels (eg 5.13.0-39-generic) fails the checks.
-    var system_kernel_int = convert_kernel_toint(SysInfo.kernelVersion);
+    var system_kernel_int = null;
     if (SysInfo.kernelVersion.contains('-rc')) {
       var system_kernel_part = SysInfo.kernelVersion.split('-rc');
       var system_kernel_part2 = system_kernel_part[0];
@@ -34,6 +39,8 @@ kernel_version_is_lower(kernel_version) async {
     } else if (SysInfo.kernelVersion.contains('generic')) {
       var system_kernel_part = SysInfo.kernelVersion.split('-');
       system_kernel_int = convert_kernel_toint(system_kernel_part[0]);
+    } else {
+      system_kernel_int = convert_kernel_toint(SysInfo.kernelVersion);
     }
     var kernel_version_int = convert_kernel_toint(kernel_version);
     if (system_kernel_int > kernel_version_int) {
