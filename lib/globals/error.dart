@@ -1,6 +1,6 @@
 class error {
   convert_to_error(str) {
-    return '\x1b[31m' + '$str' + '\x1B[0m';
+    return '\x1b[31m' + str.split(']')[0] + ']' + '\x1B[0m' + str.split(']')[1];
   }
 }
 
@@ -34,3 +34,5 @@ String error_14 = print_error.convert_to_error(
     '[error_14] The wsl kernel conf file is higher than the kernel you want to install.');
 String error_15 =
     print_error.convert_to_error('[error_15] Your system does not use apt.');
+String error_16 = print_error
+    .convert_to_error('[error_16] The wslvar command is not available.');

@@ -8,11 +8,16 @@ convert_kernel_toint(String kernel) {
   var kernel1 = kernel.replaceAll('-rc', '');
   if ('.'.allMatches(kernel1).length == 1) {
     var kernel2 = kernel1.replaceAll('.', '');
-    var kernel3 = '$kernel2' + '00';
+    var kernel3 = '$kernel2' + '000';
     return int.parse(kernel3);
   } else if ('.'.allMatches(kernel1).length == 2) {
     var kernel2 = kernel1.replaceAll('.', '');
-    var kernel3 = '$kernel2' + '0';
+    var kernel3 = '$kernel2' + '00';
+    if (kernel3.length == 8) {
+      // remove two last digits from kernel3 eg ( 5.10.102 becomes 510102 and not 5100200 )
+      kernel3 = kernel3.substring(0, kernel3.length - 2);
+    }
+
     return int.parse(kernel3);
   }
 }

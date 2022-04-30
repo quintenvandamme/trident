@@ -51,7 +51,7 @@
     },
     {
       "name": "decimal",
-      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/decimal-2.1.0",
+      "rootUri": "file:///home/quinten/.pub-cache/hosted/pub.dartlang.org/decimal-2.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -170,7 +170,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-04-17T20:16:00.679862Z",
+  "generated": "2022-04-23T20:47:05.331933Z",
   "generator": "pub",
-  "generatorVersion": "2.16.2"
+  "generatorVersion": "2.18.0-43.0.dev"
 }

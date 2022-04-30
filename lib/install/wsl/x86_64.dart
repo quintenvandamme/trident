@@ -25,7 +25,6 @@ void install_wsl_x86_64(
       var threads = get_threads();
       var slash_part = '\\';
       var slash = '$slash_part$slash_part';
-      print(download_link);
       await download_file(download_link, '/wsl2/kernel$file_extension');
       await shell.run(
           '''tar -xf $path_download/wsl2/kernel$file_extension -C $path_download/wsl2/''');

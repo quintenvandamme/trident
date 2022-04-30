@@ -17,42 +17,19 @@ check_for_new_kernel() async {
   var get_config = new config();
   var cron_schedule = get_config.cron_schedule();
   var cron_checkfor = get_config.cron_checkfor();
-  switch (cron_checkfor) {
-    case 'latest_rc':
-      {
-        cron.schedule(Schedule.parse(cron_schedule), () async {
-          if (convert_kernel_toint(await latest_rc_kernel()) >
-              convert_kernel_toint(system_kernel)) {
-            return true;
-          } else {
-            return false;
-          }
-        });
-      }
-      break;
-    case 'latest_lts':
-      {
-        cron.schedule(Schedule.parse(cron_schedule), () async {
-          if (convert_kernel_toint(await latest_lts_kernel()) >
-              convert_kernel_toint(system_kernel)) {
-            return true;
-          } else {
-            return false;
-          }
-        });
-      }
-      break;
-    case 'latest_mainline':
-      {
-        cron.schedule(Schedule.parse(cron_schedule), () async {
-          if (convert_kernel_toint(await latest_mainline_kernel()) >
-              convert_kernel_toint(system_kernel)) {
-            return true;
-          } else {
-            return false;
-          }
-        });
-      }
-      break;
-  }
+
+  // cleanup code (patch by github.com/larsb24)
+  cron.schedule(Schedule.parse(cron_schedule), () async {
+    switch (cron_checkfor) {
+      case 'latest_rc':
+        return (convert_kernel_toint(await latest_rc_kernel()) >
+            convert_kernel_toint(system_kernel));
+      case 'latest_lts':
+        return (convert_kernel_toint(await latest_lts_kernel()) >
+            convert_kernel_toint(system_kernel));
+      case 'latest_mainline':
+        return (convert_kernel_toint(await latest_mainline_kernel()) >
+            convert_kernel_toint(system_kernel));
+    }
+  });
 }

@@ -10,8 +10,12 @@ kernel_version_is_lower(kernel_version) async {
   if (is_wsl() == true) {
     var system_kernel = null;
     if (SysInfo.kernelVersion.contains('-microsoft-standard-WSL2')) {
-      system_kernel =
-          SysInfo.kernelVersion.replaceAll('-microsoft-standard-WSL2', '');
+      // remove third . in system_kernel eg ( 5.10.102.1 becomes 5.10.102 )
+      system_kernel = SysInfo.kernelVersion
+          .replaceAll('-microsoft-standard-WSL2', '')
+          .split('.')
+          .take(3)
+          .join('.');
     } else if (SysInfo.kernelVersion.contains('-trident-WSL2')) {
       system_kernel = SysInfo.kernelVersion.replaceAll('-trident-WSL2', '');
     }

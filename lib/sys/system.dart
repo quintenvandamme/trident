@@ -7,12 +7,17 @@ import 'package:Trident/sys/device.dart';
 var shell = Shell();
 
 get_username() async {
-  var get_username = await Process.run(
-    'wslvar',
-    ['USERNAME'],
-  );
-  var username = get_username.stdout;
-  return username.replaceAll("\n", "");
+  try {
+    var get_username = await Process.run(
+      'wslvar',
+      ['USERNAME'],
+    );
+    var username = get_username.stdout;
+    return username.replaceAll("\n", "");
+  } catch (error) {
+    print(error_16);
+    exit(0);
+  }
 }
 
 get_threads() {
