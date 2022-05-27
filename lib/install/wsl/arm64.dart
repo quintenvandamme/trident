@@ -34,8 +34,26 @@ void install_wsl_arm64(
       Directory.current = '$path_download/wsl2/';
       await shell.run(
           '''sudo apt-get install -y dwarves libncurses-dev gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf''');
+
+      // add kvm support for WSL2 https://boxofcables.dev/kvm-optimized-custom-kernel-wsl2-2022/
       await shell.run(
           '''sed -i 's+CONFIG_LOCALVERSION="-microsoft-standard-WSL2"+CONFIG_LOCALVERSION="-trident-WSL2"+gI' config-wsl''');
+      await shell.run(
+          '''sed -i 's/# CONFIG_KVM_GUEST is not set/CONFIG_KVM_GUEST=y/g' config-wsl''');
+      await shell.run(
+          '''sed -i 's/# CONFIG_ARCH_CPUIDLE_HALTPOLL is not set/CONFIG_ARCH_CPUIDLE_HALTPOLL=y/g' config-wsl''');
+      await shell.run(
+          '''sed -i 's/# CONFIG_HYPERV_IOMMU is not set/CONFIG_HYPERV_IOMMU=y/g' config-wsl''');
+      await shell.run(
+          '''sed -i '/^# CONFIG_PARAVIRT_TIME_ACCOUNTING is not set/a CONFIG_PARAVIRT_CLOCK=y' config-wsl''');
+      await shell.run(
+          '''sed -i '/^# CONFIG_CPU_IDLE_GOV_TEO is not set/a CONFIG_CPU_IDLE_GOV_HALTPOLL=y' config-wsl''');
+      await shell.run(
+          '''sed -i '/^CONFIG_CPU_IDLE_GOV_HALTPOLL=y/a CONFIG_HALTPOLL_CPUIDLE=y' config-wsl''');
+      await shell.run(
+          '''sed -i 's/CONFIG_HAVE_ARCH_KCSAN=y/CONFIG_HAVE_ARCH_KCSAN=n/g' config-wsl''');
+      await shell.run(
+          '''sed -i '/^CONFIG_HAVE_ARCH_KCSAN=n/a CONFIG_KCSAN=n' config-wsl''');
       await shell.run(
           '''mv $path_download/wsl2/config-wsl $path_download/wsl2/linux-$kernel_version/arch/arm64/configs/wsl_defconfig''');
       Directory.current = '$path_download/wsl2/linux-$kernel_version/';

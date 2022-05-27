@@ -23,7 +23,8 @@ String error_8 = print_error.convert_to_error(
     '[error_8] Run the command with only one - or run -help to list all the commands.');
 String error_9 = print_error.convert_to_error(
     '[error_9] Failed to fetch latest release: can\'t check for updates.');
-String error_10 = print_error.convert_to_error('[error_10] OS not supported.');
+String error_10 =
+    print_error.convert_to_error('[error_10] Operating system not supported.');
 String error_11 = print_error
     .convert_to_error('[error_11] Failed to download and install kernel.');
 String error_12 = print_error.convert_to_error(

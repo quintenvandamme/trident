@@ -21,9 +21,8 @@ get_version() {
 get_type(kernel_version) {
   if ('.'.allMatches(kernel_version).length == 1) {
     kernel_version = '$kernel_version.0';
-  }
-
-  if (kernel_version.contains('-rc')) {
+    return 'MAINLINE';
+  } else if (kernel_version.contains('-rc')) {
     return 'RC';
   } else if (get_list_lts_kernels(true).contains(
       '${kernel_version.substring(0, kernel_version.indexOf(".", kernel_version.indexOf(".") + 1))}.')) {

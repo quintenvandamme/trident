@@ -24,7 +24,7 @@ class config {
   }
 
   cron_schedule() async {
-    var cron_schedule = null;
+    var cron_schedule;
     try {
       cron_schedule = await get_config('cron_schedule');
     } catch (error) {}
@@ -32,7 +32,7 @@ class config {
   }
 
   cron_checkfor() async {
-    var cron_checkfor = null;
+    var cron_checkfor;
     try {
       cron_checkfor = await get_config('cron_checkfor');
     } catch (error) {}

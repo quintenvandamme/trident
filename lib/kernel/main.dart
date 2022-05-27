@@ -17,14 +17,13 @@ convert_kernel_toint(String kernel) {
       // remove two last digits from kernel3 eg ( 5.10.102 becomes 510102 and not 5100200 )
       kernel3 = kernel3.substring(0, kernel3.length - 2);
     }
-
     return int.parse(kernel3);
   }
 }
 
 get_wsl_kernel_config_info() async {
-  var content = null;
-  var linuxstr = null;
+  var content;
+  var linuxstr;
   if (SysInfo.kernelArchitecture == 'x86_64') {
     content = await get_contents(
         'https://raw.githubusercontent.com/microsoft/WSL2-Linux-Kernel/linux-msft-wsl-5.10.y/Microsoft/config-wsl');
